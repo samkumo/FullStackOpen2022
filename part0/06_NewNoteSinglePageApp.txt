@@ -1,0 +1,5 @@
+title 0.6 New Note (Single Page App)
+
+browser-->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: Status 201 Response {"message":"note created"}
+
