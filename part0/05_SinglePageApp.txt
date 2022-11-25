@@ -1,20 +1,21 @@
-START
+title 0.5 Single Page App
 
-User nagivates to the "Single Page App" example
+browser-->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML page
+browser-->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser-->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server-->browser: spa.js
 
-browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
-server-->browser HTML-code of SPA
-browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
-server-->browser main.css
-browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
-server-->browser spa.js
+note over browser:
+execute Javascript
+request data.json from server
+end note
 
-Javascript is exectuted on browser, containing request to load data.json from server
+browser-->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: data.json [{content: "hello", date: "2022-11-25T14:33:35.021Z"},...] 
 
-browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
-server-->browser data.json [{content: "hello", date: "2022-11-25T14:33:35.021Z"},...] 
-
-After request is completed, event handler in the javascript is triggered,
-rendering the list of notes on webpage as HTML list.
-
-END
+note over browser
+GET request completed, triggers event
+Content of data.json is rendered as list
+end note
