@@ -1,0 +1,25 @@
+START
+
+User enters text into Note-field and presses Save
+
+browser-->server HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+server-->browser Status Code 302 : HTML-redirect to https://studies.cs.helsinki.fi/exampleapp/notes
+browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser notes.HTML
+browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser main.css
+browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser main.js
+
+Javascript main.js is executed on browser
+and within it, is a request for data.json from server
+
+browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser data.json [{"content":"Example note...",date:"2022-11-25T14:29:02.419Z"},....]
+
+GET request is completed which triggers the event handler declared in main.js
+Event handler is executed which then renders the contents of data.json as HTML list insude "notes" element.
+
+END
+
+
