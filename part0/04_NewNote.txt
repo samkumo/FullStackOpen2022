@@ -5,7 +5,7 @@ User enters text into Note-field and presses Save
 browser-->server HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
 server-->browser Status Code 302 : HTML-redirect to https://studies.cs.helsinki.fi/exampleapp/notes
 browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
-server-->browser notes.HTML
+server-->browser HTML-code of Notes
 browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
 server-->browser main.css
 browser-->server HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
