@@ -1,42 +1,47 @@
 import { useState } from "react";
 
 const Button = (props) => (
-  < button onClick={props.handleClick} >
-    {props.text}
-  </button >
-)
+  <button onClick={props.handleClick}>{props.text}</button>
+);
+
 const StatisticLine = ({ text, value, unit }) => {
   return (
-    <p>{text}: {value} {unit}</p>
-  )
-}
+    <tr>
+      <td>{text}</td>
+      <td>
+        {value} {unit}
+      </td>
+    </tr>
+  );
+};
+
 const Statistics = ({ good, neutral, bad }) => {
-  const all = good + neutral + bad
-  const avg = (good * 1 + bad * -1) / all
-  const pos = (good / all) * 100
+  const all = good + neutral + bad;
+  const avg = Number((good * 1 + bad * -1) / all).toFixed(2);
+  const pos = Number((good / all) * 100).toFixed(2);
 
   if (all === 0) {
-    return (
-      <div>Feedback not given</div>
-    )
+    return <div>Feedback not given</div>;
   }
   return (
-    <div>
-      <StatisticLine text="Good" value={good} />
-      <StatisticLine text="Neutral" value={neutral} />
-      <StatisticLine text="Bad" value={bad} />
-      <StatisticLine text="All" value={all} />
-      <StatisticLine text="Average" value={avg} />
-      <StatisticLine text="Positive" value={pos} unit="%" />
-    </div>
-  )
-}
+    <table>
+      <tbody>
+        <StatisticLine text="Good" value={good} />
+        <StatisticLine text="Neutral" value={neutral} />
+        <StatisticLine text="Bad" value={bad} />
+        <StatisticLine text="All" value={all} />
+        <StatisticLine text="Average" value={avg} />
+        <StatisticLine text="Positive" value={pos} unit="%" />
+      </tbody>
+    </table>
+  );
+};
 
 const App = () => {
   // save clicks of each button to it's own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
   return (
     <>
@@ -51,7 +56,7 @@ const App = () => {
         <Statistics good={good} neutral={neutral} bad={bad} />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default App;
