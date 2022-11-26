@@ -10,6 +10,9 @@ const Display = (props) => (
     <p>Good {props.good}</p>
     <p>Neutral: {props.neutral}</p>
     <p>Bad: {props.bad}</p>
+    <p>All: {props.good + props.neutral + props.bad}</p>
+    <p>Average: {((props.good * 1) + (props.bad * -1)) / (props.good + props.neutral + props.bad)}</p>
+    <p>Positive:{(props.good / (props.good + props.neutral + props.bad)) * 100} %</p>
   </div>
 )
 
