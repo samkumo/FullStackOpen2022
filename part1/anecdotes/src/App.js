@@ -12,6 +12,7 @@ const AnecdoteTop = ({ anecdotes, votes }) => {
   const topVotes = Math.max(...votes);
   const topIndex = votes.indexOf(topVotes);
   const text = anecdotes[topIndex];
+  console.log();
   return (
     <div>
       <p>{text}</p>
