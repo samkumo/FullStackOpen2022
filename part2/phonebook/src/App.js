@@ -127,7 +127,7 @@ const App = () => {
     event.preventDefault()
     setFilterPersons(
       persons.filter(function (person) {
-        return person.name.includes(filter)
+        return person.name.toUpperCase().includes(filter.toUpperCase())
       })
     )
   }
