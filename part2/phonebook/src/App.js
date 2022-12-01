@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Person from './components/Person'
+import personService from './services/persons'
 
 const SubmitForm = (props) => {
   return (
@@ -46,41 +48,34 @@ const Persons = ({ persons }) => {
   ))
 }
 
-const Person = ({ person }) => {
-  return (
-    <div>
-      {person.name} || {person.number}
-    </div>
-  )
-}
-
 const App = () => {
+  //Complete list of all added people
+  const [persons, setPersons] = useState([])
+  const [filterPersons, setFilterPersons] = useState(persons) //Filtered people list
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
+
+  //Read all entries from DB
+  /*   
   const hook = () => {
     axios.get('http://localhost:3001/persons').then((response) => {
       setPersons(response.data)
       setFilterPersons(response.data)
     })
   }
-
-  //Complete list of all added people
-  const [persons, setPersons] = useState([])
-  /*
-    { key: 0, name: 'Arto Hellas', number: '040-123456' },
-    { key: 1, name: 'Ada Lovelace', number: '39-44-5323523' },
-    { key: 2, name: 'Dan Abramov', number: '12-43-234345' },
-    { key: 3, name: 'Mary Poppendieck', number: '39-23-6423122' },
-  ])
+  useEffect(hook, []) 
   */
-  const [filterPersons, setFilterPersons] = useState(persons) //Filtered people list
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
+  //Read all entries from DB, using service
+  useEffect(() => {
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons)
+    })
+  })
 
-  useEffect(hook, [])
-
+  //Add new person to phonebook
   const addName = (event) => {
     event.preventDefault()
-    //Validate new name value
     if (isNameEmpty(newName)) {
       return
     }
@@ -90,13 +85,15 @@ const App = () => {
     }
     console.log('persons.lenght:', persons.length)
     const personObject = {
-      id: persons.length + 1,
+      //id: persons.length + 1,
       name: newName,
       number: newNumber,
     }
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    personService.create(personObject).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson))
+      setNewName('')
+      setNewNumber('')
+    })
 
     //Reset filter so we can definitely see that new person was added
     setFilter('')
