@@ -51,25 +51,22 @@ const Persons = ({ persons }) => {
 const App = () => {
   //Complete list of all added people
   const [persons, setPersons] = useState([])
-  const [filterPersons, setFilterPersons] = useState(persons) //Filtered people list
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  //Read all entries from DB
-  /*   
-  const hook = () => {
-    axios.get('http://localhost:3001/persons').then((response) => {
-      setPersons(response.data)
-      setFilterPersons(response.data)
-    })
-  }
-  useEffect(hook, []) 
-  */
   //Read all entries from DB, using service
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
-      setPersons(initialPersons)
+      if (filter === '') {
+        setPersons(initialPersons)
+      } else {
+        setPersons(
+          initialPersons.filter((person) =>
+            person.name.toUpperCase().includes(filter.toUpperCase())
+          )
+        )
+      }
     })
   })
 
@@ -97,7 +94,6 @@ const App = () => {
 
     //Reset filter so we can definitely see that new person was added
     setFilter('')
-    setFilterPersons(persons.concat(personObject))
   }
 
   const isNameDuplicate = (newName) => {
@@ -122,11 +118,14 @@ const App = () => {
   }
   const filterNames = (event) => {
     event.preventDefault()
-    setFilterPersons(
-      persons.filter(function (person) {
-        return person.name.toUpperCase().includes(filter.toUpperCase())
-      })
-    )
+
+    personService.getAll().then((personsAll) => {
+      setPersons(
+        personsAll.map((person) =>
+          person.name.toUpperCase().includes(filter.toUpperCase())
+        )
+      )
+    })
   }
 
   return (
@@ -151,7 +150,7 @@ const App = () => {
       }
       <h2>Numbers</h2>
       <div>
-        <Persons persons={filterPersons}></Persons>
+        <Persons persons={persons}></Persons>
       </div>
     </div>
   )
