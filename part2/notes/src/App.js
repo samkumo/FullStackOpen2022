@@ -26,12 +26,8 @@ const App = () => {
       setNotes(notes.concat(returnednote))
       setNewNote('')
     })
-
-    /*     noteService.create(noteObject).then((response) => {
-      setNotes(notes.concat(response.data))
-      setNewNote('')
-    }) */
   }
+
   const notesToShow = showAll
     ? notes
     : notes.filter((note) => note.important === true)
