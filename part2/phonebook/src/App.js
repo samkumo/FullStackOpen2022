@@ -48,12 +48,29 @@ const Persons = ({ persons }) => {
   ))
 }
 
+
+const Notification = ({ message }) => {
+  if (message === null || message === "" || message === undefined) {
+    return null
+  }
+  return (<div className='success'>{message}</div>)
+}
+const ErrorMessage = ({ message }) => {
+  if (message === null || message === "" || message === undefined) {
+    return null
+  }
+  return (
+    <div className='error'>message</div>
+  )
+}
+
 const App = () => {
   //Complete list of all added people
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState()
 
   //Read all entries from DB, using service
   useEffect(() => {
@@ -106,8 +123,11 @@ const App = () => {
       setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
+      setNotification(personObject.name + " added!")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     })
-
     //Reset filter so we can definitely see that new person was added
     setFilter('')
   }
@@ -147,6 +167,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notification}></Notification>
       {
         <Filter
           filterNames={filterNames}

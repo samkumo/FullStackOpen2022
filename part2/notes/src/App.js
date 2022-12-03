@@ -2,6 +2,7 @@ import Note from './components/Note'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import noteService from './services/notes'
+import "./index.css"
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -47,7 +48,7 @@ const App = () => {
         setNotes(notes.map((note) => (note.id !== id ? note : returnednote)))
       })
       .catch((error) => {
-        alert("This note '${note.content}' does not exist anymore")
+        alert("This note '" + note.content + "' does not exist anymore")
         setNotes(notes.filter((n) => n.id !== id))
       })
   }
