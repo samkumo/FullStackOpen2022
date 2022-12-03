@@ -76,15 +76,31 @@ const App = () => {
     if (isNameEmpty(newName)) {
       return
     }
-    if (isNameDuplicate(newName)) {
-      alert(`${newName} is already added to the phonebook!`)
-      return
-    }
     console.log('persons.lenght:', persons.length)
     const personObject = {
       //id: persons.length + 1,
       name: newName,
       number: newNumber,
+    }
+
+    //Name already exists in phonebook
+    if (isNameDuplicate(personObject.name)) {
+      //alert(`${personObject.name} is already added to the phonebook!`)
+      if (window.confirm(personObject.name + " is already added to the phonebook, replace the old number?")) {
+        persons
+          .filter(person => person.name === personObject.name)
+          .map(person => {
+            personObject.id = person.id
+            personService.update(person.id, personObject)
+          })
+        personService.getAll()
+          .then(returnedPersons => {
+            setPersons(returnedPersons)
+          })
+      }
+      setNewName('')
+      setNewNumber('')
+      return
     }
     personService.create(personObject).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson))
