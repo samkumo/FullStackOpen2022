@@ -3,6 +3,8 @@ import axios from 'axios'
 import Person from './components/Person'
 import personService from './services/persons'
 
+
+
 const SubmitForm = (props) => {
   return (
     <div>
@@ -30,7 +32,6 @@ const SubmitForm = (props) => {
     </div>
   )
 }
-
 const Filter = (props) => {
   return (
     <form onSubmit={props.filterNames}>
@@ -41,13 +42,6 @@ const Filter = (props) => {
     </form>
   )
 }
-
-const Persons = ({ persons }) => {
-  return persons.map((person) => (
-    <Person key={person.id} person={person}></Person>
-  ))
-}
-
 
 const Notification = ({ message }) => {
   if (message === null || message === "" || message === undefined) {
@@ -72,6 +66,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState()
 
+
   //Read all entries from DB, using service
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -85,7 +80,7 @@ const App = () => {
         )
       }
     })
-  })
+  }, [filter])
 
   //Add new person to phonebook
   const addName = (event) => {
@@ -102,22 +97,22 @@ const App = () => {
 
     //Name already exists in phonebook
     if (isNameDuplicate(personObject.name)) {
+      console.log("duplicate name");
       //alert(`${personObject.name} is already added to the phonebook!`)
       if (window.confirm(personObject.name + " is already added to the phonebook, replace the old number?")) {
-        persons
-          .filter(person => person.name === personObject.name)
-          .map(person => {
-            personObject.id = person.id
-            personService.update(person.id, personObject)
-          })
-        personService.getAll()
-          .then(returnedPersons => {
-            setPersons(returnedPersons)
-          })
+        console.log("before", persons);
+        const tempPersons = persons
+        persons.map(person => {
+          if (person.name === personObject.name) {
+            person.number = personObject.number
+            personService.update(person.id, person)
+          }
+        })
+        setPersons(tempPersons)
+        setNewName('')
+        setNewNumber('')
+        return
       }
-      setNewName('')
-      setNewNumber('')
-      return
     }
     personService.create(personObject).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson))
@@ -130,8 +125,9 @@ const App = () => {
     })
     //Reset filter so we can definitely see that new person was added
     setFilter('')
-  }
 
+
+  }
   const isNameDuplicate = (newName) => {
     const duplicates = persons.filter((person) => person.name === newName)
     return duplicates.length !== 0 //Returns TRUE if duplicates found
@@ -155,15 +151,36 @@ const App = () => {
   const filterNames = (event) => {
     event.preventDefault()
 
-    personService.getAll().then((personsAll) => {
-      setPersons(
-        personsAll.map((person) =>
-          person.name.toUpperCase().includes(filter.toUpperCase())
-        )
-      )
+    personService.getAll().then((response) => {
+      const filtered = response.filter((person) => {
+        if (person.name.toUpperCase().includes(filter.toUpperCase())) {
+          return person
+        }
+      })
+      setPersons(filtered)
     })
   }
 
+  const Persons = ({ persons }) => {
+    return persons.map((person) => (
+      <div key={"P" + person.id}>
+        <Person key={person.id} person={person}></Person>
+        <button key={"BTN" + person.id}
+          onClick={(event) => {
+            if (window.confirm('Delete this person?')) {
+              deletePerson(event, person)
+            }
+          }}
+        >delete</button>
+      </div>
+    ))
+  }
+  const deletePerson = (event, person) => {
+    event.preventDefault()
+    personService.deletePerson(person.id).then(personService.getAll().then(response => {
+      setPersons(response)
+    }))
+  }
   return (
     <div>
       <h1>Phonebook</h1>
