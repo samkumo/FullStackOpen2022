@@ -55,9 +55,13 @@ app.post("/api/persons", (request, response) => {
     //Validate that message is not empty
     const body = request.body
     if (!body.name || !body.number) {
-        return response.status(400).json({ error: "content missing" })
+        return response.status(400).json({ error: "Name and phonenumber required!" })
     }
-
+    //Do not allowe duplicate names
+    const duplicate = persons.filter(person => person.name === body.name)
+    if (duplicate.length != 0) {
+        return response.status(400).json({ error: "Name must be unique!" })
+    }
     //Create person entry
     const person = {
         id: generateId(),
