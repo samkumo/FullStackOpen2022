@@ -26,21 +26,61 @@ let notes = [
     }
 ]
 
+//
+// Initialize
+//
+app.use(express.json())
+
+//
+// Routes
+//
 app.get("/", (request, response) => {
     response.send("<h1>Hello World!</h1>")
 })
 app.get("/api/notes", (request, response) => {
     response.json(notes)
 })
+app.get("/api/notes/:id", (request, response) => {
+    const id = Number(request.params.id)
+    const note = notes.find(note => note.id === id)
+    note ? response.json(note) : response.status(404).end("Resource not found!")
+})
+app.delete("/api/notes/:id", (request, response) => {
+    console.log("id: " + id);
+    notes = notes.filter(note => note.id !== id)
+    response.status(204).end()
+})
+app.post("/api/notes", (request, response) => {
+    //Validate that message is not empty
+    const body = request.body
+    if (!body.content) {
+        return response.status(400).json({
+            error: "content missing"
+        })
+    }
 
+    //Create note object
+    const note = {
+        id: generateId(),
+        content: body.content,
+        date: new Date(),
+        important: body.important || false
+    }
+    notes = notes.concat(note)
+    response.json(note)
+})
+
+//
+// Helper functions
+//
+const generateId = () => {
+    return notes.length > 0
+        ? Math.max(...notes.map(n => n.id)) + 1 : 0
+}
+
+//
+// Run
+//
 app.listen(PORT, () => {
     console.log('Server running on port ${PORT}');
 })
-
-/* const app = http.createServer((request, response) => {
-    response.writeHead(200, { 'Content-Type': 'application/json' })
-    response.end(JSON.stringify(notes))
-})
-
-app.listen(PORT)
-console.log('Server running on port ${PORT}'); */
