@@ -46,7 +46,9 @@ const unknownEndpoint = (request, response) => {
 // Morgan
 //morgan('tiny')
 //morgan(':method :url :status - :response-time ms')
-app.use(morgan('tiny'))
+//app.use(morgan('tiny'))
+morgan.token('body', (req, res) => { return JSON.stringify(req.body) })
+app.use(morgan(':method :url :status - :res[Content-Length] :response-time ms :body'))
 
 //
 // Initialize middleware
