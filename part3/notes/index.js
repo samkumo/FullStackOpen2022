@@ -46,7 +46,7 @@ app.get("/api/notes/:id", (request, response) => {
     note ? response.json(note) : response.status(404).end("Resource not found!")
 })
 app.delete("/api/notes/:id", (request, response) => {
-    console.log("id: " + id);
+    const id = Number(request.params.id)
     notes = notes.filter(note => note.id !== id)
     response.status(204).end()
 })

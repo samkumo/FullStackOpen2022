@@ -3,6 +3,7 @@ const PORT = 3001
 const express = require("express")
 const { allowedNodeEnvironmentFlags } = require("process")
 const { generateKey } = require("crypto")
+const morgan = require("morgan")
 const app = express()
 
 let persons = [
@@ -29,9 +30,30 @@ let persons = [
 ]
 
 //
-// Initialize
+// Middleware functions
+//
+const requestLogger = (request, response, next) => {
+    console.log("Method: ", request.method);
+    console.log("Path: ", request.path);
+    console.log("Body: ", request.body);
+    console.log("---");
+    next()
+}
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+// Morgan
+//morgan('tiny')
+//morgan(':method :url :status - :response-time ms')
+app.use(morgan('tiny'))
+
+//
+// Initialize middleware
 //
 app.use(express.json())
+//app.use(requestLogger)
+//app.use(unknownEndpoint)
 
 //
 // Routes
@@ -85,4 +107,5 @@ const generateId = () => {
 app.listen(PORT, () => {
     console.log('Server running on port ${PORT}');
 })
+
 
