@@ -1,6 +1,5 @@
 import Note from './components/Note'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import noteService from './services/notes'
 import "./index.css"
 
@@ -13,7 +12,7 @@ const App = () => {
     noteService.getAll().then((initialNotes) => {
       setNotes(initialNotes)
     })
-  })
+  }, [])
 
   const addNote = (event) => {
     event.preventDefault()
@@ -38,7 +37,7 @@ const App = () => {
   }
 
   const toggleImportanceOf = (id) => {
-    const url = `http://localhost:3001/notes/${id}`
+    const url = `/notes/${id}`
     const note = notes.find((n) => n.id === id)
     const changedNote = { ...note, important: !note.important }
 

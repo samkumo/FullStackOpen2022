@@ -1,7 +1,8 @@
 const http = require("http")
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 const express = require("express")
 const app = express()
+const cors = require("cors")
 
 // npm run dev
 
@@ -30,6 +31,8 @@ let notes = [
 // Initialize
 //
 app.use(express.json())
+app.use(cors())           //Enable Cross-Origin Resource Sharing
+app.use(express.static('build'))
 
 //
 // Routes
