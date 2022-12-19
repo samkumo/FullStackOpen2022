@@ -1,10 +1,13 @@
+//THIS IS THE BACKEND
+
 const http = require("http")
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 const express = require("express")
 const { allowedNodeEnvironmentFlags } = require("process")
 const { generateKey } = require("crypto")
 const morgan = require("morgan")
 const app = express()
+const cors = require("cors")
 
 let persons = [
     {
@@ -56,6 +59,8 @@ app.use(morgan(':method :url :status - :res[Content-Length] :response-time ms :b
 app.use(express.json())
 //app.use(requestLogger)
 //app.use(unknownEndpoint)
+app.use(cors())
+app.use(express.static('build'))
 
 //
 // Routes
