@@ -5,6 +5,11 @@ const PORT = process.env.PORT || 3001
 const express = require("express")
 const app = express()
 const cors = require("cors")
+const mongoose = require('mongoose')
+
+//Password provided via command line argument
+const url = `mongodb+srv://samkumo:${password}@cluster0.cngc7ai.mongodb.net/noteApp?retryWrites=true&w=majority`
+
 
 // npm run dev
 
@@ -36,6 +41,14 @@ app.use(express.json())
 app.use(cors())           //Enable Cross-Origin Resource Sharing
 app.use(express.static('build'))
 
+mongoose.connect(url)
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean,
+})
+const Note = mongoose.model('Note', noteSchema)
+
 //
 // Routes
 //
@@ -43,7 +56,8 @@ app.get("/", (request, response) => {
     response.send("<h1>Hello World!</h1>")
 })
 app.get("/api/notes", (request, response) => {
-    response.json(notes)
+    //response.json(notes)
+    Note.find({}).then(notes => response.json(notes))
 })
 app.get("/api/notes/:id", (request, response) => {
     const id = Number(request.params.id)
