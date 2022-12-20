@@ -1,15 +1,12 @@
 // THIS IS THE BACKEND
-
 const http = require("http")
 const PORT = process.env.PORT || 3001
 const express = require("express")
 const app = express()
 const cors = require("cors")
 const mongoose = require('mongoose')
-
-//Password provided via command line argument
-const url = `mongodb+srv://samkumo:${password}@cluster0.cngc7ai.mongodb.net/noteApp?retryWrites=true&w=majority`
-
+require('dotenv').config()
+const Note = require('./models/note')
 
 // npm run dev
 
@@ -41,14 +38,6 @@ app.use(express.json())
 app.use(cors())           //Enable Cross-Origin Resource Sharing
 app.use(express.static('build'))
 
-mongoose.connect(url)
-const noteSchema = new mongoose.Schema({
-    content: String,
-    date: Date,
-    important: Boolean,
-})
-const Note = mongoose.model('Note', noteSchema)
-
 //
 // Routes
 //
@@ -61,8 +50,11 @@ app.get("/api/notes", (request, response) => {
 })
 app.get("/api/notes/:id", (request, response) => {
     const id = Number(request.params.id)
-    const note = notes.find(note => note.id === id)
-    note ? response.json(note) : response.status(404).end("Resource not found!")
+    //const note = notes.find(note => note.id === id)
+    Note.findById(request.params.id).then(note => {
+        response.json(note)
+    })
+    //note ? response.json(note) : response.status(404).end("Resource not found!")
 })
 app.delete("/api/notes/:id", (request, response) => {
     const id = Number(request.params.id)
@@ -79,14 +71,14 @@ app.post("/api/notes", (request, response) => {
     }
 
     //Create note object
-    const note = {
-        id: generateId(),
+    const note = new Note({
         content: body.content,
+        important: body.important || false,
         date: new Date(),
-        important: body.important || false
-    }
-    notes = notes.concat(note)
-    response.json(note)
+    })
+    note.save().then(savedNote => {
+        response.json(savedNote)
+    })
 })
 
 //
@@ -101,5 +93,5 @@ const generateId = () => {
 // Run
 //
 app.listen(PORT, () => {
-    console.log('Server running on port ${PORT}');
+    console.log(`Server running on port ${PORT}`);
 })
