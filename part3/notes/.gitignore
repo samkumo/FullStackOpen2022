@@ -26,4 +26,5 @@ yarn-error.log*
 fly.exe
 fly.toml
 flyctl.exe
+fly.exe.old
 wintun.dll
