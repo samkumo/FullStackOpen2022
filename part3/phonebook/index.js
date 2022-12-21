@@ -8,6 +8,8 @@ const { generateKey } = require("crypto")
 const morgan = require("morgan")
 const app = express()
 const cors = require("cors")
+require('dotenv').config()
+const Person = require('./models/person')
 
 let persons = [
     {
@@ -65,20 +67,34 @@ app.use(express.static('build'))
 //
 // Routes
 //
-app.get("/api/persons", (request, response) => response.json(persons))
+app.get("/api/persons", (request, response) => {
+    //response.json(persons)
+    Person.find({}).then(result => {
+        persons = result
+        response.json(result)
+    })
+})
 app.get("/api/persons/:id", (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    person ? response.json(person) : response.status(404).end("Resource not found")
+    Person.findById(request.params.id).then(result => {
+        response.json(result)
+    })
+    //const person = persons.find(person => person.id === id)
+    //person ? response.json(person) : response.status(404).end("Resource not found")
 })
 app.get("/info", (request, response) => {
-    const msg = "Phonebook has info for " + persons.length + " people <br>" + new Date()
+    //const msg = "Phonebook has info for " + persons.length + " people <br>" + new Date()
+    const msg = `Phonebook has info for ${Person.length} people <br> ${new Date()}`
     response.send(msg)
 })
 app.delete("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-    response.status(204).end()
+    const id = request.params.id
+    //persons = persons.filter(person => person.id !== id)+
+    console.log(id);
+    Person.findByIdAndDelete(id)
+        .then(result => console.log(`Person deleted from MongoDB: ${result}`))
+        .catch(err => console.log('Error deleting from DB: ', err.message))
+    //response.status(204).end()
 })
 app.post("/api/persons", (request, response) => {
     //Validate that message is not empty
@@ -87,18 +103,25 @@ app.post("/api/persons", (request, response) => {
         return response.status(400).json({ error: "Name and phonenumber required!" })
     }
     //Do not allowe duplicate names
-    const duplicate = persons.filter(person => person.name === body.name)
-    if (duplicate.length != 0) {
-        return response.status(400).json({ error: "Name must be unique!" })
-    }
+    //const duplicate = persons.filter(person => person.name === body.name)
+    /*     const duplicate = Person.find({ name: body.name })
+        if (duplicate.length != 0) {
+            return response.status(400).json({ error: "Name must be unique!" })
+        } */
     //Create person entry
-    const person = {
-        id: generateId(),
+    const person = new Person({
         name: body.name,
         number: body.number
-    }
-    persons = persons.concat(person)
-    response.json(person)
+    })
+    person.save().then(result => response.json(result))
+
+    /*     const person = {
+            id: generateId(),
+            name: body.name,
+            number: body.number
+        }
+        persons = persons.concat(person)
+        response.json(person) */
 })
 
 //
@@ -112,7 +135,7 @@ const generateId = () => {
 // Run
 //
 app.listen(PORT, () => {
-    console.log('Server running on port ${PORT}');
+    console.log(`Server running on port ${PORT}`);
 })
 
 
