@@ -46,7 +46,10 @@ app.get("/", (request, response) => {
 })
 app.get("/api/notes", (request, response) => {
     //response.json(notes)
-    Note.find({}).then(notes => response.json(notes))
+    Note.find({}).then(result => {
+        notes = result
+        response.json(result)
+    })
 })
 app.get("/api/notes/:id", (request, response) => {
     const id = Number(request.params.id)
@@ -58,7 +61,10 @@ app.get("/api/notes/:id", (request, response) => {
 })
 app.delete("/api/notes/:id", (request, response) => {
     const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
+    Note.findByIdAndDelete(response.params.id)
+        .then(result => console.log('Note deleted from MongoDB!'))
+        .catch((err) => console.log('error deleting from DB: ', err.message))
+    //notes = notes.filter(note => note.id !== id)
     response.status(204).end()
 })
 app.post("/api/notes", (request, response) => {
@@ -84,10 +90,12 @@ app.post("/api/notes", (request, response) => {
 //
 // Helper functions
 //
+/*
 const generateId = () => {
     return notes.length > 0
         ? Math.max(...notes.map(n => n.id)) + 1 : 0
 }
+*/
 
 //
 // Run

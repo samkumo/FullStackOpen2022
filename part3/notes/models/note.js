@@ -3,6 +3,8 @@ const baseUrl = process.env.MONGODB_URI
 const pw = process.env.MONGODB_PW
 const url = baseUrl.replace('<password>', pw)
 
+mongoose.set('strictQuery', false)
+
 mongoose.connect(url)
     .then(result => {
         console.log('connected to MongoDB');
