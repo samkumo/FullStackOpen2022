@@ -1,6 +1,6 @@
 // THIS IS THE BACKEND
 const PORT = process.env.PORT || 3001
-const express = require("express")
+const express = require('express')
 const app = express()
 const cors = require("cors")
 require('dotenv').config()
@@ -37,33 +37,42 @@ app.use(cors())           //Enable Cross-Origin Resource Sharing
 app.use(express.static('build'))
 
 //
+// Error handler middleware
+//
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    next(error)
+}
+app.use(errorHandler)
+
+//
 // Routes
 //
 app.get("/", (request, response) => {
     response.send("<h1>Hello World!</h1>")
 })
 app.get("/api/notes", (request, response) => {
-    //response.json(notes)
     Note.find({}).then(result => {
         notes = result
         response.json(result)
     })
 })
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
     const id = Number(request.params.id)
-    //const note = notes.find(note => note.id === id)
-    Note.findById(request.params.id).then(note => {
-        response.json(note)
-    })
-    //note ? response.json(note) : response.status(404).end("Resource not found!")
+    Note.findById(request.params.id)
+        .then(note => {
+            note ? response.json(note) : response.status(404).end()
+        })
+        .catch(error => next(error))
 })
 app.delete("/api/notes/:id", (request, response) => {
     const id = Number(request.params.id)
     Note.findByIdAndDelete(response.params.id)
-        .then(result => console.log('Note deleted from MongoDB!'))
-        .catch((err) => console.log('error deleting from DB: ', err.message))
-    //notes = notes.filter(note => note.id !== id)
-    response.status(204).end()
+        .then(result => response.status(204).end())
+        .catch(error => next(error))
 })
 app.post("/api/notes", (request, response) => {
     //Validate that message is not empty
@@ -73,7 +82,6 @@ app.post("/api/notes", (request, response) => {
             error: "content missing"
         })
     }
-
     //Create note object
     const note = new Note({
         content: body.content,
@@ -84,16 +92,18 @@ app.post("/api/notes", (request, response) => {
         response.json(savedNote)
     })
 })
-
-//
-// Helper functions
-//
-/*
-const generateId = () => {
-    return notes.length > 0
-        ? Math.max(...notes.map(n => n.id)) + 1 : 0
-}
-*/
+app.put('/api/notes/:id', (request, response, next) => {
+    const body = request.body
+    const note = {
+        content: body.content,
+        important: body.important
+    }
+    Note.findByIdAndUpdate(request.params.id, note, { new: true })
+        .then(updatedNote => {
+            response.json(updatedNote)
+        })
+        .catch(error => next(error))
+})
 
 //
 // Run

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const baseUrl = process.env.MONGODB_URI
 const pw = process.env.MONGODB_PW
-const url = baseUrl.replace('<password>', pw)
+const app = 'noteApp'
+const url = baseUrl.replace('<password>', pw).replace('<app>', app)
 
 mongoose.set('strictQuery', false)
 
