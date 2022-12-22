@@ -83,7 +83,6 @@ const App = () => {
   }
   const deletePerson = (event, person) => {
     event.preventDefault()
-
     //Remove person from runtime arrays
     setPersons(persons.filter(x => x.id !== person.id))
     setPersonsFilter(personsFilter.filter(x => x.id !== person.id))
@@ -95,7 +94,7 @@ const App = () => {
         //Display error
         setNotificationError(person.name + " has already been remove from the server!")
         setTimeout(() => setNotificationError(null), 5000)
-      });
+      })
   }
 
   //
