@@ -73,11 +73,17 @@ const App = () => {
       setNewNumber('')
 
       //Also push the new person to DB and display notification
-      personService.create(personObject).then(response => {
-        console.log("Person added: ", personObject.name);
-        setNotificationSuccess("Person added :" + personObject.name)
-        setTimeout(() => setNotificationSuccess(null), 5000)
-      })
+      personService.create(personObject)
+        .then(response => {
+          console.log("Person added: ", personObject.name);
+          setNotificationSuccess("Person added :" + personObject.name)
+          setTimeout(() => setNotificationSuccess(null), 5000)
+        })
+        .catch(error => {
+          setPersons(persons.filter(x => x.id !== personObject.id))
+          setPersonsFilter(persons.filter(x => x.id !== personObject.id))
+          console.log(error.message)
+        })
       return
     }
   }

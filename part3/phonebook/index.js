@@ -10,6 +10,7 @@ const app = express()
 const cors = require("cors")
 require('dotenv').config()
 const Person = require('./models/person')
+const { assert } = require("console")
 
 let persons = [
     {
@@ -111,7 +112,12 @@ app.post("/api/persons", (request, response, next) => {
         name: body.name,
         number: body.number
     })
-    person.save().then(result => response.json(result))
+    let error = person.validateSync()
+    if (error !== undefined) {
+        return response.status(400).json({ error: "Invalid phonenumber" })
+    } else {
+        person.save().then(result => response.json(result))
+    }
 })
 app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
