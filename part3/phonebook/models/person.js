@@ -10,7 +10,7 @@ mongoose.set('strictQuery', false)
 
 //Connect to DB
 mongoose.connect(url)
-    .then(result => console.log('connected to MongoDB'))
+    .then(() => console.log('connected to MongoDB'))
     .catch(err => console.log('error connecting to MongoDB:', err.message))
 
 const personSchema = new mongoose.Schema({
@@ -24,7 +24,7 @@ const personSchema = new mongoose.Schema({
         validate: {
             validator: function (v) {
                 let valid = false
-                console.log(v);
+                console.log(v)
                 if (/^\d+$/.test(v)) {
                     valid = true
                 }

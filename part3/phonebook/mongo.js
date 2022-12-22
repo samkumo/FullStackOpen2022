@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
-    console.log('Please provide the password as an argument: node mongo.js <password>');
+    console.log('Please provide the password as an argument: node mongo.js <password>')
     process.exit(1)
 }
 
@@ -16,11 +16,11 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
-if (mode == 'INSERT') {
+if (mode === 'INSERT') {
     //Insert new entry
     mongoose.connect(url)
         .then((result) => {
-            console.log('connected');
+            console.log('connected')
             const person = new Person({
                 name: process.argv[3],
                 number: process.argv[4],
@@ -28,7 +28,7 @@ if (mode == 'INSERT') {
             return person.save()
         })
         .then(() => {
-            console.log(`Added ${process.argv[3]}, number ${process.argv[4]} to the phonebook`);
+            console.log(`Added ${process.argv[3]}, number ${process.argv[4]} to the phonebook`)
             mongoose.connection.close()
         })
         .catch((err) => console.log(err))
@@ -37,13 +37,13 @@ if (mode == 'INSERT') {
     //Read all entries
     mongoose.connect(url)
         .then((result) => {
-            console.log('connected');
-            console.log('phonebook:');
+            console.log('connected')
+            console.log('phonebook:')
             Person.find({})
                 .then(result => {
                     result.forEach(person => console.log(`${person._id} ${person.name} ${person.number}`))
                     mongoose.connection.close()
                 })
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
 }
