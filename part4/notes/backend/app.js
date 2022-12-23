@@ -8,10 +8,8 @@ const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 const url = config.MONGODB_URI.replace('<password>', config.MONGODB_PW).replace('<app>', config.APP)
 
-logger.info('connecting to', url)
-
-mongoose.set('strictQuery', false)
-mongoose.connect(config.url)
+logger.info('connecting to', config.MONGODB_URI)
+mongoose.connect(url)
     .then(() => {
         logger.info('connected to MongoDB')
     })
@@ -26,5 +24,6 @@ app.use(middleware.requestLogger)
 app.use('/api/notes', notesRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+
 
 module.exports = app

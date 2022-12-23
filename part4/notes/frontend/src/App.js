@@ -12,6 +12,7 @@ const App = () => {
     noteService.getAll().then((initialNotes) => {
       setNotes(initialNotes)
     })
+      .catch(error => console.log(error.message))
   }, [])
 
   const addNote = (event) => {
@@ -22,10 +23,12 @@ const App = () => {
       important: Math.random() < 0.5,
     }
 
-    noteService.create(noteObject).then((returnednote) => {
-      setNotes(notes.concat(returnednote))
-      setNewNote('')
-    })
+    noteService.create(noteObject)
+      .then((returnednote) => {
+        setNotes(notes.concat(returnednote))
+        setNewNote('')
+      })
+      .catch(error => console.log(error.message))
   }
 
   const notesToShow = showAll
@@ -37,7 +40,6 @@ const App = () => {
   }
 
   const toggleImportanceOf = (id) => {
-    const url = `/notes/${id}`
     const note = notes.find((n) => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
