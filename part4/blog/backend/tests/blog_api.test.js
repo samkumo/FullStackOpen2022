@@ -51,7 +51,6 @@ test('new blog can be added', async () => {
     expect(titles).toContain(newBlog.title)
 })
 test('likes is set default value of 0', async () => {
-    const blogsPrev = await helper.blogsInDb()
     const newBlog = {
         title: 'Blog added via test',
         author: 'Tester',
@@ -68,6 +67,18 @@ test('likes is set default value of 0', async () => {
     const filter = blogsAfter.filter(b => b.id === savedBlog.body.id)
     expect(filter).toBeDefined()
     expect(filter[0].likes).toBeDefined()
+})
+test('title and url are mandatory', async () => {
+    const newBlog = {
+        // title: 'Blog added via test',
+        author: 'Tester without title',
+        //  url: 'www.fullstackopen.com',
+        likes: 10
+    }
+    const savedBlog = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
 })
 
 afterAll(() => mongoose.connection.close())
