@@ -8,7 +8,7 @@ const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 
 const url = config.MONGODB_URI.replace('<password>', config.MONGODB_PW).replace('<app>', config.APP)
-logger.info('connecting to', url)
+logger.info('connecting to', config.MONGODB_URI)
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
