@@ -3,11 +3,9 @@ const Note = require('../models/note')
 const logger = require('../utils/logger')
 
 //GET all notes
-notesRouter.get('/', (request, response) => {
-    logger.info('GET')
-    Note.find({}).then(notes => {
-        response.json(notes)
-    })
+notesRouter.get('/', async (request, response) => {
+    const notes = await Note.find({})
+    response.json(notes)
 })
 
 //GET specific note by ID
