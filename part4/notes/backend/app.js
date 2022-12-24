@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 
 const url = config.MONGODB_URI.replace('<password>', config.MONGODB_PW).replace('<app>', config.APP)
 
-logger.info('connecting to', config.MONGODB_URI)
+
 mongoose.connect(url)
     .then(() => {
         logger.info('connected to MongoDB')
