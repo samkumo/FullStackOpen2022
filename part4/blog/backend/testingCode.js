@@ -13,7 +13,7 @@ const testBlogs = [{
     title: "Bob blog",
     author: "Bob",
     url: "www.gmail.com",
-    likes: 2,
+    likes: 1,
     __v: 0
 },
 {
@@ -21,7 +21,7 @@ const testBlogs = [{
     title: "Jane's blog",
     author: "Jane",
     url: "www.gmail.com",
-    likes: 3,
+    likes: 4,
     __v: 0
 },
 {
@@ -29,18 +29,36 @@ const testBlogs = [{
     title: "Bob Blog the Second",
     author: "Bob",
     url: "www.gmail.com",
+    likes: 6,
+    __v: 0
+},
+{
+    _id: 5,
+    title: "Jane's blog",
+    author: "Jane",
+    url: "www.gmail.com",
     likes: 4,
     __v: 0
-}
+},
 ]
 const mostBlogs = {
     author: 'Bob',
     blogs: 2
 }
+const mostLikes = {
+    author: 'Jane',
+    likes: 8
+}
 
-const blogCounts = _.countBy(testBlogs, 'author')
-console.log(blogCounts)
-const maxKey = _.maxBy(_.keys(blogCounts), function (obj) {
-    return blogCounts[obj]
-})
-console.log(blogCounts[maxKey]);
+const mostLiked = _.maxBy(testBlogs, 'likes')
+const grouped = _.groupBy(testBlogs, 'author')
+console.log(grouped);
+
+const sum = _(testBlogs)
+    .groupBy('author')
+    .map((blog, author) => ({
+        author: author,
+        likes: _.sumBy(blog, 'likes')
+    })).value()
+console.log(sum);
+console.log(_.maxBy(sum, 'likes'));

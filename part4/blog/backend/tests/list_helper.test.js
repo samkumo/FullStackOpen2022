@@ -41,6 +41,10 @@ describe('listHelper', () => {
         author: 'Bob',
         blogs: 2
     }
+    const mostLikes = {
+        author: 'Jane',
+        likes: 9
+    }
 
     //
     // Tests
@@ -50,6 +54,9 @@ describe('listHelper', () => {
     })
     test('sum of likes', () => {
         expect(listHelper.totalLikes(testBlogs)).toBe(18)
+    })
+    test('most likes', () => {
+        expect(listHelper.mostLikes(testBlogs)).toBe(JSON.stringify(mostLikes))
     })
     test('favorite blog', () => {
         expect(listHelper.favoriteBlog(testBlogs)).toBe(testBlogs[2])
