@@ -8,7 +8,7 @@ const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 
 const url = config.MONGODB_URI.replace('<password>', config.MONGODB_PW).replace('<app>', config.APP)
-logger.info('connecting to', config.MONGODB_URI)
+logger.info('connecting to', url)
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
@@ -20,7 +20,7 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-app.use('/api/blogs', blogsRouter)
+app.use('/api', blogsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
