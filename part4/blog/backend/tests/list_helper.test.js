@@ -25,4 +25,7 @@ describe('listHelper', () => {
     test('sum of likes', () => {
         expect(listHelper.totalLikes(testBlogs)).toBe(8)
     })
+    test('favorite blog', () => {
+        expect(listHelper.favoriteBlog(testBlogs)).toBe(testBlogs[1])
+    })
 })
