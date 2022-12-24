@@ -30,5 +30,25 @@ test('all blogs have defined ID', async () => {
     const blogsInDb = await helper.blogsInDb()
     blogsInDb.map(blog => expect(blog.id).toBeDefined())
 })
+test('new blog can be added', async () => {
+    const blogsPrev = await helper.blogsInDb()
+    const newBlog = {
+        title: 'Blog added via test',
+        author: 'Tester',
+        url: 'www.fullstackopen.com',
+        likes: 2
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    //Readback to verify new blog was added to DB
+    const blogsAfter = await helper.blogsInDb()
+    expect(blogsAfter).toHaveLength(helper.initialBlogs.length + 1)
+    const titles = blogsAfter.map(r => r.title)
+    expect(titles).toContain(newBlog.title)
+})
 
 afterAll(() => mongoose.connection.close())
