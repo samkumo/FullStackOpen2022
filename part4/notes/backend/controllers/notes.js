@@ -1,7 +1,5 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
-const logger = require('../utils/logger')
-
 
 //GET all notes
 notesRouter.get('/', async (request, response) => {
@@ -12,6 +10,8 @@ notesRouter.get('/', async (request, response) => {
 //GET specific note by ID
 notesRouter.get('/:id', async (request, response) => {
     const note = await Note.findById(request.params.id)
+    const a = 2
+    const b = 3
     if (note) {
         response.json(note)
     } else {

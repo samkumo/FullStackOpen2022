@@ -31,7 +31,7 @@ const nonExistingId = async () => {
     const blog = new Blog({ title: 'DeletedBlog', author: 'None' })
     await blog.save()
     await blog.remove()
-    return blog._id.toString()
+    return blog._id
 }
 //Return all blogs in DB
 const blogsInDb = async () => {

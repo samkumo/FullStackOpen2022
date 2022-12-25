@@ -81,4 +81,19 @@ test('title and url are mandatory', async () => {
         .expect(400)
 })
 
+test('single blog can be deleted', async () => {
+    const blogsBefore = await helper.blogsInDb()
+    const deleteMe = blogsBefore[1]
+    //First test deleting non-existing blog, should return error
+    await api
+        .delete(`/api/blogs/${await helper.nonExistingId()}`)
+        .expect(204)
+
+    //Test deleting specific, existing blog
+    const deletedBlog = await api.delete(`/api/blogs/${deleteMe.id}`).expect(202)
+    const blogsAfter = await helper.blogsInDb()
+    const blog = blogsAfter[{ id: deleteMe.id }]
+    expect(blogsAfter[{ id: deleteMe.id }]).not.toBeDefined()
+})
+
 afterAll(() => mongoose.connection.close())

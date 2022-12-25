@@ -53,7 +53,6 @@ const mostLikes = {
 const mostLiked = _.maxBy(testBlogs, 'likes')
 const grouped = _.groupBy(testBlogs, 'author')
 console.log(grouped);
-
 const sum = _(testBlogs)
     .groupBy('author')
     .map((blog, author) => ({
