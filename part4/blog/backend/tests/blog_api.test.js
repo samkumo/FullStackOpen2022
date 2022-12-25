@@ -95,5 +95,14 @@ test('single blog can be deleted', async () => {
     const blog = blogsAfter[{ id: deleteMe.id }]
     expect(blogsAfter[{ id: deleteMe.id }]).not.toBeDefined()
 })
+test('blog can be updated', async () => {
+    const blogsBefore = await helper.blogsInDb()
+    const blog = blogsBefore[1]
+    blog.likes++
+    await api.put(`/api/blogs/${blog.id}`).send(blog).expect(200)
+    const blogAfter = await (await helper.blogsInDb()).filter(x => x.id === blog.id)[0]
+    expect(blog.likes == blogAfter.likes)
+
+})
 
 afterAll(() => mongoose.connection.close())

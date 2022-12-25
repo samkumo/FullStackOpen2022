@@ -63,6 +63,5 @@ describe('listHelper', () => {
     })
     test('most blogs', () => {
         expect(listHelper.mostBlogs(testBlogs)).toBe(JSON.stringify(mostBlogs))
-        console.log('Most blogs:', mostBlogs);
     })
 })
