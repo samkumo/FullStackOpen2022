@@ -10,8 +10,6 @@ notesRouter.get('/', async (request, response) => {
 //GET specific note by ID
 notesRouter.get('/:id', async (request, response) => {
     const note = await Note.findById(request.params.id)
-    const a = 2
-    const b = 3
     if (note) {
         response.json(note)
     } else {
