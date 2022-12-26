@@ -6,6 +6,7 @@ const api = supertest(app)
 const Note = require('../models/note')
 const userId = process.env.userId
 const token = process.env.TOKEN
+
 //Initialize test data
 beforeEach(async () => {
     await Note.deleteMany({})
