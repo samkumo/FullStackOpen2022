@@ -4,7 +4,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Note = require('../models/note')
-
+const userId = process.env.userId
+const token = process.env.TOKEN
 //Initialize test data
 beforeEach(async () => {
     await Note.deleteMany({})
@@ -33,6 +34,7 @@ describe('when there is initially some notes saved', () => {
 
 describe('addition of a new note', () => {
     test('a valid note can be added', async () => {
+
         //Create new note that we POST to test DB
         const text = 'async/await simplifies making async calls'
         const users = await helper.usersInDb()
@@ -44,7 +46,8 @@ describe('addition of a new note', () => {
         //POST it
         await api
             .post('/api/notes')
-            .send(newNote)
+            .set('Authorization', 'bearer ' + token)
+            .send(newNote, userId)
             .expect(201)
             .expect('Content-Type', /application\/json/)
         //Read back to make sure it was saved in DB
@@ -60,6 +63,7 @@ describe('addition of a new note', () => {
         //Attempt to POST it
         await api
             .post('/api/notes')
+            .set('Authorization', 'bearer ' + token)
             .send(newNote)
             .expect(400)
         const notesAtEnd = await helper.notesInDb()
@@ -86,13 +90,17 @@ describe('deletion of a note', () => {
 
         await api
             .delete(`/api/notes/${noteToDelete.id}`)
+            .set('Authorization', 'bearer ' + token)
             .expect(204)
         const notesAtEnd = await helper.notesInDb()
         expect(notesAtEnd).toHaveLength(helper.initialNotes.length - 1)
     })
     test('FAIL with status code 400 if ID is invalid', async () => {
         const invalidNote = await helper.nonExistingId()
-        await api.delete(`/api/notes/${invalidNote}`).expect(400)
+        await api
+            .delete(`/api/notes/${invalidNote}`)
+            .set('Authorization', 'bearer ' + token)
+            .expect(400)
     })
 })
 afterAll(() => {

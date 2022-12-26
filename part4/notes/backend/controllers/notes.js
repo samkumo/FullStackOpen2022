@@ -1,6 +1,16 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+//Authorization
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7)
+    }
+    return null
+}
 
 //GET all notes
 notesRouter.get('/', async (request, response) => {
@@ -25,7 +35,14 @@ notesRouter.get('/:id', async (request, response) => {
 //POST New note
 notesRouter.post('/', async (request, response) => {
     const body = request.body
-    if (!body.content) { return response.status(400).end() }
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    if (!body.content) {
+        return response.status(400).end()
+    }
 
     const user = await User.findById(body.userId)
     const note = new Note({
@@ -44,6 +61,14 @@ notesRouter.post('/', async (request, response) => {
 
 //DELETE Note by ID
 notesRouter.delete('/:id', async (request, response) => {
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    if (!request.params.id) {
+        return response.status(400).end()
+    }
     const deleted = await Note.findByIdAndDelete(request.params.id)
     deleted ? response.status(204).end() : response.status(400).end()
 })
@@ -51,6 +76,15 @@ notesRouter.delete('/:id', async (request, response) => {
 //PUT Update Note
 notesRouter.put('/:id', async (request, response) => {
     const body = request.body
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    if (!body.content) {
+        return response.status(400).end()
+    }
+
     const note = {
         content: body.content,
         important: body.important
