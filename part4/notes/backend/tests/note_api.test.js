@@ -35,9 +35,11 @@ describe('addition of a new note', () => {
     test('a valid note can be added', async () => {
         //Create new note that we POST to test DB
         const text = 'async/await simplifies making async calls'
+        const users = await helper.usersInDb()
         const newNote = {
             content: text,
-            important: true
+            important: true,
+            userId: users[0].id
         }
         //POST it
         await api
