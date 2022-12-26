@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [{
     title: "My first blog",
@@ -25,6 +26,18 @@ const initialBlogs = [{
     likes: 4,
 }
 ]
+const initialUsers = [
+    {
+        username: 'testing',
+        name: 'Test tester',
+        password: '123456'
+    },
+    {
+        username: 'mmeika',
+        name: 'Matti Meikäläinen',
+        password: 'salasana'
+    }
+]
 
 //Returns and ID for blog that no longer exists in DB
 const nonExistingId = async () => {
@@ -38,5 +51,17 @@ const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
-
-module.exports = { initialBlogs, nonExistingId, blogsInDb }
+const nonExistingUser = async () => {
+    const user = new User({ username: 'none', name: 'No name', password: 'Nopassword' })
+    await user.save()
+    await user.remove()
+    return user._id.toString()
+}
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(user => user.toJSON())
+}
+module.exports = {
+    initialBlogs, nonExistingId, blogsInDb,
+    initialUsers, nonExistingUser, usersInDb
+}
