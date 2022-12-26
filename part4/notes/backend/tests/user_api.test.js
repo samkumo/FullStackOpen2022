@@ -31,3 +31,22 @@ describe('reading users from Db', () => {
         await api.get(`/api/users/${username}`).expect(400)
     })
 })
+describe('writing users into DB', () => {
+    test('add new user', async () => {
+        const newUser = {
+            username: 'kpekka',
+            name: 'Pekka Koodari',
+            password: 'salainenpw',
+        }
+        await api.post('/api/users').send(newUser).expect(201)
+    })
+    test('duplicate user cannot be added', async () => {
+        const usersBefore = await helper.usersInDb()
+        const newUser = {
+            username: usersBefore[0].username,
+            name: 'duplicate',
+            password: 'password'
+        }
+        await api.post('/api/users').send(newUser).expect(400)
+    })
+})

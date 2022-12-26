@@ -13,10 +13,15 @@ usersRouter.get('/:id', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
     const { username, name, password } = request.body
+    console.log(username, name, password)
+    //Check that name is unique
+    const existingUser = await User.findOne({ username })
+    if (existingUser) { return response.status(400).json({ error: 'Name already taken' }) }
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
     const user = new User({ username, name, passwordHash })
     const savedUser = await user.save()
-    response.json(savedUser)
+    response.status(201).json(savedUser)
 })
 module.exports = usersRouter
