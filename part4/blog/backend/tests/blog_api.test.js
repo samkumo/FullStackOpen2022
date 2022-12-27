@@ -19,7 +19,7 @@ const createTestUser = (async () => {
     return response
 })
 const loginTestUser = (async () => {
-    await User.deleteMany({})
+    //await User.deleteMany({})
     const username = 'blogTester'
     const password = 'blogs'
     const usersInDb = await helper.usersInDb()
@@ -33,7 +33,21 @@ const loginTestUser = (async () => {
         .expect(200)
     return JSON.parse(response.text)
 })
+const createTestBlog = async (token) => {
+    const blog = {
+        title: 'Testblog',
+        author: 'Tester of blogs',
+        url: 'www.google.com'
+    }
+    const response = await api
+        .post('/api/blogs')
+        .set('Authorization', 'bearer ' + token)
+        .send(blog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    return JSON.parse(response.text)
 
+}
 
 //Initialize test data before each test
 beforeEach(async () => {
@@ -75,7 +89,6 @@ describe('blogs can be modified', () => {
             author: 'Tester',
             url: 'www.fullstackopen.com',
             likes: 2,
-            userId: user.id
         }
         await api
             .post('/api/blogs')
@@ -97,7 +110,6 @@ describe('blogs can be modified', () => {
             title: 'Blog added via test',
             author: 'Tester',
             url: 'www.fullstackopen.com',
-            userId: user.id
         }
         const savedBlog = await api
             .post('/api/blogs')
@@ -136,14 +148,14 @@ describe('blogs can be modified', () => {
             .set('Authorization', 'bearer ' + login.token)
             .expect(204)
 
+        const blog = await createTestBlog(login.token)
         //Test deleting specific, existing blog
-        const deletedBlog = await api
-            .delete(`/api/blogs/${deleteMe.id}`)
+        await api
+            .delete(`/api/blogs/${blog.id}`)
             .set('Authorization', 'bearer ' + login.token)
             .expect(202)
         const blogsAfter = await helper.blogsInDb()
-        const blog = blogsAfter[{ id: deleteMe.id }]
-        expect(blogsAfter[{ id: deleteMe.id }]).not.toBeDefined()
+        expect(blogsAfter[{ id: blog.id }]).not.toBeDefined()
     })
     test('blog can be updated', async () => {
         const login = await loginTestUser()

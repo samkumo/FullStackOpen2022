@@ -22,13 +22,13 @@ blogsRouter.post('/', async (request, response) => {
     if (body.title === undefined || body.url === undefined) {
         return response.status(400).end()
     }
-    const user = await User.findById(request.body.userId)
+    const user = await User.findById(decodedToken.id)
     const blog = new Blog({
         title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes || 0, //Optional: default 0
-        user: user._id
+        user: decodedToken.id
     })
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog)
@@ -42,9 +42,18 @@ blogsRouter.delete('/:id', async (request, response) => {
     if (!decodedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
-    const deleted = await Blog.findByIdAndDelete(request.params.id)
-    deleted ? response.status(202).end() : response.status(204).end()
-
+    const blog = await Blog.findById(request.params.id)
+    if (!blog) { return response.status(204).end() }
+    if (blog.user === null || decodedToken.id === null) {
+        return response.status(400).end()
+    }
+    if (blog.user.toString() === decodedToken.id.toString()) {
+        //Blog can only be deleted by the original user
+        await blog.delete()
+        return response.status(202).end()
+    } else {
+        return response.status(401).end()
+    }
 })
 blogsRouter.put('/:id', async (request, response) => {
     const body = request.body
@@ -59,7 +68,8 @@ blogsRouter.put('/:id', async (request, response) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes,
+        user: body.user
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })

@@ -6,24 +6,28 @@ const initialBlogs = [{
     author: "John",
     url: "www.google.com",
     likes: 3,
+    user: '111111111111111111111111'
 },
 {
     title: "Bob blog",
     author: "Bob",
     url: "www.gmail.com",
     likes: 2,
+    user: '111111111111111111111111'
 },
 {
     title: "Jane's blog",
     author: "Jane",
     url: "www.gmail.com",
     likes: 9,
+    user: '111111111111111111111111'
 },
 {
     title: "Bob Blog the Second",
     author: "Bob",
     url: "www.gmail.com",
     likes: 4,
+    user: '111111111111111111111111'
 }
 ]
 const initialUsers = [
@@ -33,6 +37,7 @@ const initialUsers = [
         password: '123456'
     },
     {
+        _id: '111111111111111111111111',
         username: 'mmeika',
         name: 'Matti Meikäläinen',
         password: 'salasana'
