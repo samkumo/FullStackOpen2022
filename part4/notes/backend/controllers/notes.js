@@ -34,6 +34,7 @@ notesRouter.get('/:id', async (request, response) => {
 
 //POST New note
 notesRouter.post('/', async (request, response) => {
+    console.log(await User.find({}))
     const body = request.body
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)

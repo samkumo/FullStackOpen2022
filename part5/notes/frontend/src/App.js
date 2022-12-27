@@ -64,10 +64,12 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({ username, password })
+      noteService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (error) {
+      console.log(error.message)
       console.log('Wrong credentials');
       setErrorMessage('Wrong credentials')
       setTimeout(() => { setErrorMessage(null) }, 5000)
