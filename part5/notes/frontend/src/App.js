@@ -3,6 +3,7 @@ import Notification from './components/Notification'
 import { useState, useEffect } from 'react'
 import noteService from './services/notes'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
 import "./index.css"
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
@@ -92,22 +94,25 @@ const App = () => {
     setUser(null)
     noteService.setToken(null)
   }
-  const LoginForm = () => {
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
     return (
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
-        <div>
-          Username
-          <input type='text' value={username} name='Username'
-            onChange={({ target }) => setUsername(target.value)}>
-          </input><br></br>
-          Password
-          <input type='password' value={password} name='Password'
-            onChange={({ target }) => setPassword(target.value)}>
-          </input>
-        </div >
-        <button type='submit'>Login</button>
-      </form >
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>Login</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>Cancel</button>
+        </div>
+      </div>
     )
   }
   const NoteForm = () => {
@@ -127,7 +132,7 @@ const App = () => {
       <h1>Application</h1>
       <Notification message={errorMessage} />
       {user === null
-        ? LoginForm()
+        ? loginForm()
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button></div>}
       <h2>Notes</h2>

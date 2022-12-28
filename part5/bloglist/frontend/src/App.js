@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
 import './App.css';
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -76,22 +78,25 @@ const App = () => {
     }
   }
 
-  const LoginForm = () => {
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
     return (
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
-        <div>
-          Username
-          <input type='text' value={username} name='Username'
-            onChange={({ target }) => setUsername(target.value)}>
-          </input><br />
-          Password
-          <input type='password' value={password} name='Password'
-            onChange={({ target }) => setPassword(target.value)}>
-          </input>
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>Login</button>
         </div>
-        <button type='submit'>Login</button>
-      </form>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}>
+          </LoginForm>
+          <button onClick={() => setLoginVisible(false)}>Cancel</button>
+        </div>
+      </div>
     )
   }
   const BlogForm = () => {
@@ -133,7 +138,7 @@ const App = () => {
       <Notification message={errorMessage} type='error'></Notification>
       <Notification message={successMessage} type='success'></Notification>
       {user === null
-        ? LoginForm()
+        ? loginForm()
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button></div>}
       {user !== null && BlogForm()}
