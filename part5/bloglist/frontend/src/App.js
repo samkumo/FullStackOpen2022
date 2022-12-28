@@ -3,10 +3,12 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [blog, setBlog] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
@@ -41,8 +43,8 @@ const App = () => {
     } catch (error) {
       console.log(error.message)
       console.log('Wrong credentials')
-      //  setErrorMessage('Wrong credentials')
-      //  setTimeout(() => { setErrorMessage(null) }, 5000)
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => { setErrorMessage(null) }, 5000)
     }
   }
   const handleLogout = async () => {
@@ -64,6 +66,8 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      setSuccessMessage(`A new blog '${title}' by ${author} was added!`)
+      setTimeout(() => { setSuccessMessage(null) }, 5000)
     } catch (error) {
       setBlog(null)
       console.log(error.message)
@@ -126,7 +130,8 @@ const App = () => {
   return (
     <div>
       <h1>Application</h1>
-      <Notification message={errorMessage}></Notification>
+      <Notification message={errorMessage} type='error'></Notification>
+      <Notification message={successMessage} type='success'></Notification>
       {user === null
         ? LoginForm()
         : <div><p>{user.name} logged in</p>
