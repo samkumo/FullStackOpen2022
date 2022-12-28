@@ -11,7 +11,7 @@ const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
 const url = config.MONGODB_URI.replace('<password>', config.MONGODB_PW).replace('<app>', config.APP)
-logger.info('connecting to', config.MONGODB_URI)
+logger.info('connecting to', url)
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
