@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -130,16 +130,16 @@ const App = () => {
         </form>
       )
     } */
-  const Blogs = (props) => {
-    return (
-      <div>
-        <h2>Blogs</h2>
-        {
-          props.blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />)
-        }
-      </div>)
-  }
+  /*   const Blogs = (props) => {
+      return (
+        <div>
+          <h2>Blogs</h2>
+          {
+            props.blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} />)
+          }
+        </div>)
+    } */
 
   return (
     <div>
@@ -150,11 +150,11 @@ const App = () => {
         ? loginForm()
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button>
-          <Togglable buttonLabel='New blog' ref={blogFormRef}>
+          <Togglable buttonLabel='New blog' buttonLabel2='Cancel' ref={blogFormRef}>
             <BlogForm createBlog={addBlog} />
           </Togglable>
         </div>}
-      {user !== null && <Blogs blogs={blogs} />}
+      <Blogs blogs={blogs}></Blogs>
     </div>
   )
 }

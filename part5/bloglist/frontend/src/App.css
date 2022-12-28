@@ -16,3 +16,9 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+.blogDetails {
+  border-style: solid;
+  border-radius: 3px;
+  border-color: grey;
+  padding: 5px;
+}
