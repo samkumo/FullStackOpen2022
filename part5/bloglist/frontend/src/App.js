@@ -17,16 +17,13 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [loginVisible, setLoginVisible] = useState(false)
 
-  const blogFormRef = useRef()
-  let flip = false
-
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
       setBlogs(blogs)
     }
     )
-  }, [flip])
+  }, [])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistAppUser')
     if (loggedUserJSON) {
@@ -98,11 +95,11 @@ const App = () => {
         ? loginForm()
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button>
-          <Togglable buttonLabel='New blog' buttonLabel2='Cancel' ref={blogFormRef}>
+          <Togglable buttonLabel='New blog' buttonLabel2='Cancel'>
             <BlogForm createBlog={addBlog} />
           </Togglable>
         </div>}
-      <Blogs blogs={blogs} flip={flip}></Blogs>
+      <Blogs blogs={blogs}></Blogs>
     </div>
   )
 }
