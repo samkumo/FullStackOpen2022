@@ -10,7 +10,6 @@ import './App.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [blog, setBlog] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
@@ -19,13 +18,15 @@ const App = () => {
   const [loginVisible, setLoginVisible] = useState(false)
 
   const blogFormRef = useRef()
+  let flip = false
+
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
       setBlogs(blogs)
     }
     )
-  }, [blog])
+  }, [flip])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistAppUser')
     if (loggedUserJSON) {
@@ -64,28 +65,6 @@ const App = () => {
       .catch(error => console.log(error.message))
   }
 
-  /*   const handleAddBlog = async (event) => {
-      event.preventDefault()
-      try {
-        // const blog = { title: title, author: author, url: url }
-        const body = {}
-        body.title = title
-        body.author = author
-        body.url = url
-        await blogService.create(body)
-        setBlog({ title: title, author: author, url: url })
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-        setSuccessMessage(`A new blog '${title}' by ${author} was added!`)
-        setTimeout(() => { setSuccessMessage(null) }, 5000)
-      } catch (error) {
-        setBlog(null)
-        console.log(error.message)
-        setErrorMessage('Blog could not be added!')
-        setTimeout(() => { setErrorMessage(null) }, 5000)
-      }
-    } */
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -108,38 +87,7 @@ const App = () => {
       </div>
     )
   }
-  /*   const BlogForm = () => {
-      return (
-        <form onSubmit={handleAddBlog}>
-          <h2>Add new blog:</h2>
-          <div>
-            Title:
-            <input type='text' value={title} name='Title'
-              onChange={({ target }) => setTitle(target.value)}>
-            </input><br />
-            Author:
-            <input type='text' value={author} name='Author'
-              onChange={({ target }) => setAuthor(target.value)}>
-            </input><br />
-            Url:
-            <input type='text' value={url} name='Url'
-              onChange={({ target }) => setUrl(target.value)}>
-            </input><br />
-          </div>
-          <button type='submit'>Create</button>
-        </form>
-      )
-    } */
-  /*   const Blogs = (props) => {
-      return (
-        <div>
-          <h2>Blogs</h2>
-          {
-            props.blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />)
-          }
-        </div>)
-    } */
+
 
   return (
     <div>
@@ -154,7 +102,7 @@ const App = () => {
             <BlogForm createBlog={addBlog} />
           </Togglable>
         </div>}
-      <Blogs blogs={blogs}></Blogs>
+      <Blogs blogs={blogs} flip={flip}></Blogs>
     </div>
   )
 }
