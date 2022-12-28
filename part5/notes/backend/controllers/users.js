@@ -13,9 +13,11 @@ usersRouter.get('/:id', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
     const { username, name, password } = request.body
-    //Check that name is unique
     const existingUser = await User.findOne({ username })
     if (existingUser) { return response.status(400).json({ error: 'Name already taken' }) }
+    if (username.length === 0 || password.length === 0) {
+        return response.status(400).json({ error: 'Username or password cannot be empty' })
+    }
 
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
