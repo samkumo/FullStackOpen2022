@@ -69,10 +69,12 @@ const App = () => {
       }).catch(error => console.log(error.message))
   }
   const deleteBlog = (blogObject) => {
-    blogService.deleteBlog(blogObject.id)
-      .then((response) => {
-        setBlogs(blogs.filter(x => x.id !== blogObject.id))
-      }).catch(error => console.log(error.message))
+    if (window.confirm(`Remove blog '${blogObject.title} by ${blogObject.author}?`)) {
+      blogService.deleteBlog(blogObject.id)
+        .then((response) => {
+          setBlogs(blogs.filter(x => x.id !== blogObject.id))
+        }).catch(error => console.log(error.message))
+    }
   }
 
   const loginForm = () => {
