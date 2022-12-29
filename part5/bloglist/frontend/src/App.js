@@ -6,7 +6,7 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
-import './App.css';
+import './App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -34,6 +34,7 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -60,6 +61,8 @@ const App = () => {
     blogService.create(blogObject)
       .then((returnedblog) => {
         setBlogs(blogs.concat(returnedblog))
+        setSuccessMessage('New blog added!')
+        setTimeout(() => { setSuccessMessage(null), 5000 })
       }).catch(error => console.log(error.message))
   }
   const updateBlog = (blogObject) => {
@@ -71,7 +74,7 @@ const App = () => {
   const deleteBlog = (blogObject) => {
     if (window.confirm(`Remove blog '${blogObject.title} by ${blogObject.author}?`)) {
       blogService.deleteBlog(blogObject.id)
-        .then((response) => {
+        .then(() => {
           setBlogs(blogs.filter(x => x.id !== blogObject.id))
         }).catch(error => console.log(error.message))
     }

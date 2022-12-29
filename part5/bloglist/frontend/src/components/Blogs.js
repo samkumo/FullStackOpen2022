@@ -1,4 +1,4 @@
-import Blog from "./Blog"
+import Blog from './Blog'
 
 const Blogs = (props) => {
     props.blogs.sort((x, y) => y.likes - x.likes)
@@ -8,7 +8,6 @@ const Blogs = (props) => {
             {props.blogs.map(blog =>
                 <Blog key={blog.id}
                     blog={blog}
-                    blogs={props.blogs}
                     updateBlog={props.updateBlog}
                     deleteBlog={props.deleteBlog} />)}
         </div>)

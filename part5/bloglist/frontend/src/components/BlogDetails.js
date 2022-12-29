@@ -1,13 +1,7 @@
 import '../App.css'
-import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const BlogDetails = ({ blog, blogs, updateBlog, deleteBlog }) => {
-    /*     const likeBlog = async (event) => {
-            event.preventDefault()
-            blog.likes++
-            const response = await blogService.update(blog.id, blog)
-            console.log(JSON.stringify(response));
-        } */
+const BlogDetails = ({ blog, updateBlog, deleteBlog }) => {
 
     const likeBlog = (event) => {
         event.preventDefault()
@@ -30,5 +24,11 @@ const BlogDetails = ({ blog, blogs, updateBlog, deleteBlog }) => {
             <button type='button' onClick={deleteB}>Delete</button>
         </div>
     )
+}
+BlogDetails.propTypes = {
+    blog: PropTypes.object.isRequired,
+    blogs: PropTypes.array,
+    updateBlog: PropTypes.func.isRequired,
+    deleteBlog: PropTypes.func.isRequired
 }
 export default BlogDetails
