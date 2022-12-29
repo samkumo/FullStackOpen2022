@@ -17,6 +17,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [loginVisible, setLoginVisible] = useState(false)
 
+  const blogDetailRef = useRef()
+
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -58,10 +60,20 @@ const App = () => {
     blogService.create(blogObject)
       .then((returnedblog) => {
         setBlogs(blogs.concat(returnedblog))
-      })
-      .catch(error => console.log(error.message))
+      }).catch(error => console.log(error.message))
   }
-
+  const updateBlog = (blogObject) => {
+    blogService.update(blogObject)
+      .then((returnedblog) => {
+        setBlogs(blogs.map(x => x.id !== returnedblog.id ? x : returnedblog))
+      }).catch(error => console.log(error.message))
+  }
+  const deleteBlog = (blogObject) => {
+    blogService.deleteBlog(blogObject.id)
+      .then((response) => {
+        setBlogs(blogs.filter(x => x.id !== blogObject.id))
+      }).catch(error => console.log(error.message))
+  }
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -96,10 +108,17 @@ const App = () => {
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button>
           <Togglable buttonLabel='New blog' buttonLabel2='Cancel'>
-            <BlogForm createBlog={addBlog} />
+            <BlogForm
+              createBlog={addBlog}
+
+              ref={blogDetailRef} />
           </Togglable>
         </div>}
-      <Blogs blogs={blogs}></Blogs>
+      <Blogs
+        blogs={blogs}
+        updateBlog={updateBlog}
+        deleteBlog={deleteBlog}
+      ></Blogs>
     </div>
   )
 }
