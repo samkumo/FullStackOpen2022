@@ -20,8 +20,8 @@ const BlogDetails = ({ blog, updateBlog, deleteBlog }) => {
             Author: {blog.author}<br />
             URL: {blog.url}<br />
             Likes: {blog.likes}
-            <button type='button' onClick={likeBlog}>Like</button><br />
-            <button type='button' onClick={deleteB}>Delete</button>
+            <button className='likeButton' type='button' onClick={likeBlog}>Like</button><br />
+            <button className='deleteButton' type='button' onClick={deleteB}>Delete</button>
         </div>
     )
 }
