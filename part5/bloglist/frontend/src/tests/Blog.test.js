@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -9,12 +9,10 @@ import BlogDetails from '../components/BlogDetails'
 describe('<Blog />', () => {
     let container
     const dummy = () => {
-        return 'TESTING'
+        return null
     }
     const updateBlog = dummy
     const deleteBlog = dummy
-
-
     const blog = {
         title: 'Testing Blog',
         author: 'Test Class',
@@ -22,10 +20,9 @@ describe('<Blog />', () => {
         likes: 10
     }
     const blogs = [{ blog }]
-
-
     const buttonLabel1 = 'View'
     const buttonLabel2 = 'Hide'
+
     beforeEach(() => {
         container = render(
             <Blog
@@ -49,12 +46,20 @@ describe('<Blog />', () => {
         const elementAuthor = await screen.queryByText(blog.author)
         expect(elementTitle)
         expect(elementAuthor)
+        // screen.debug()
     })
     test('blog detail should be hidden by default', () => {
         const elementUrl = container.querySelector('.blogDetails')
         expect(elementUrl).not.toBeVisible()
+        // screen.debug()
     })
     test('blog detail should be visible after SHOW button is clicked', async () => {
+        const user = userEvent.setup()
+        const button = screen.getByText(buttonLabel1)
+        await user.click(button)
 
+        const element = container.querySelector('.blogDetails')
+        expect(element).toBeVisible()
+        // screen.debug()
     })
 })
