@@ -3,9 +3,9 @@ import Togglable from './Togglable'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => (
-    <div>
+    <div className='blog'>
         {blog.title} by {blog.author}
-        <Togglable buttonLabel='View' buttonLabel2='Hide'>
+        <Togglable buttonLabel1='View' buttonLabel2='Hide'>
             <BlogDetails blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}></BlogDetails>
         </Togglable>
     </div>
