@@ -49,7 +49,7 @@ notesRouter.post('/', async (request, response) => {
 
 //DELETE Note by ID
 notesRouter.delete('/:id', async (request, response) => {
-    if (!request.user || !request.token) {
+    if (!request.user.id || !request.token) {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
     if (!request.params.id) {
@@ -62,19 +62,14 @@ notesRouter.delete('/:id', async (request, response) => {
 //PUT Update Note
 notesRouter.put('/:id', async (request, response) => {
     const body = request.body
-    if (!request.user || !request.token) {
+    if (!request.body.user || !request.token) {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
     if (!body.content) {
         return response.status(400).end()
     }
-
-    /*     const note = {
-            content: body.content,
-            important: body.important
-        } */
     const note = await Note.findById(request.params.id)
-    if (note.user.toString() === request.user.toString()) {
+    if (note.user.toString() === request.body.user.id) {
         note.content = body.content
         note.important = body.important
         const updatedNote = await Note.findByIdAndUpdate(request.params.id, note, { new: true })

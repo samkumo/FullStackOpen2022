@@ -53,8 +53,8 @@ const App = () => {
 
     noteService
       .update(id, changedNote)
-      .then((returnednote) => {
-        setNotes(notes.map((note) => (note.id !== id ? note : returnednote)))
+      .then(returnednote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnednote))
       })
       .catch((error) => {
         setErrorMessage(`Note ${note.contet} does not exist anymore!`)
