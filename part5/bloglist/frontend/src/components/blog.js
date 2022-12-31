@@ -13,7 +13,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => (
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    blogs: PropTypes.array.isRequired,
+    blogs: PropTypes.array,
     updateBlog: PropTypes.func.isRequired,
     deleteBlog: PropTypes.func.isRequired
 }
