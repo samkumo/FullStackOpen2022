@@ -1,3 +1,5 @@
+import { copyFileSync } from "fs"
+
 /* eslint-disable no-undef */
 const bloggerName = 'Cypress Test'
 const username = 'cyUser'
@@ -51,5 +53,53 @@ describe('Bloglist App', function () {
             cy.get('#submitBlog-button').click()
             cy.contains(title)
         })
+        describe('When blog exists', function () {
+            beforeEach(function () {
+                cy.contains('New blog').click()
+                cy.createBlog({ title: title, author: author, url: url })
+            })
+            it('blog can be liked', function () {
+                cy.contains(title).parent().parent().as('thisBlog')
+                cy.get('@thisBlog').contains('View').click()
+                cy.get('@thisBlog').get('#like-button').click()
+                cy.get('@thisBlog').contains('Likes: 1')
+            })
+            it('blog can be deleted', function () {
+                cy.contains(title).parent().parent().as('thisBlog')
+                cy.get('@thisBlog').contains('View').click()
+                cy.get('@thisBlog').get('#delete-button').click()
+                cy.contains(title).should('not.exist')
+            })
+        })
+        describe('When multiple blogs exist', function () {
+            beforeEach(function () {
+                cy.contains('New blog').click()
+                cy.createBlog({ title: 'Blog1', author: author, url: url })
+                cy.createBlog({ title: 'Blog2', author: author, url: url })
+                cy.createBlog({ title: 'Blog3', author: author, url: url })
+
+                cy.contains('Blog1').parent().parent().contains('View').click()
+                cy.contains('Blog2').parent().parent().contains('View').click()
+                cy.contains('Blog3').parent().parent().contains('View').click()
+                cy.contains('Title: Blog1').find('#like-button').click()
+                cy.contains('Title: Blog2').find('#like-button').click()
+                cy.contains('Title: Blog2').find('#like-button').click()
+                cy.contains('Title: Blog3').find('#like-button').click()
+                cy.contains('Title: Blog3').find('#like-button').click()
+                cy.contains('Title: Blog3').find('#like-button').click()
+            })
+            it('Blogs are sorted according to likes', function () {
+                cy.get('.blog').should('have.length', 3)
+                    .then((blogs) => {
+                        cy.wrap(blogs[0]).find('#blogDetails')
+                            .should('have.text', 'Title: Blog3Author: Cypress TestURL: www.cypress.ioLikes: 3LikeDelete')
+                        cy.wrap(blogs[1]).find('#blogDetails')
+                            .should('have.text', 'Title: Blog2Author: Cypress TestURL: www.cypress.ioLikes: 2LikeDelete')
+                        cy.wrap(blogs[2]).find('#blogDetails')
+                            .should('have.text', 'Title: Blog1Author: Cypress TestURL: www.cypress.ioLikes: 1LikeDelete')
+                    })
+            })
+        })
     })
 })
+

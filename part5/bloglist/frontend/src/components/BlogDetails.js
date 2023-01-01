@@ -15,13 +15,13 @@ const BlogDetails = ({ blog, updateBlog, deleteBlog }) => {
     }
 
     return (
-        <div className='blogDetails'>
+        <div className='blogDetails' id='blogDetails'>
             Title: {blog.title}<br />
             Author: {blog.author}<br />
             URL: {blog.url}<br />
             Likes: {blog.likes}
-            <button className='likeButton' type='button' onClick={likeBlog}>Like</button><br />
-            <button className='deleteButton' type='button' onClick={deleteB}>Delete</button>
+            <button id='like-button' className='likeButton' type='button' onClick={likeBlog}>Like</button><br />
+            <button id='delete-button' className='deleteButton' type='button' onClick={deleteB}>Delete</button>
         </div>
     )
 }
