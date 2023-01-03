@@ -5,7 +5,7 @@ const noteReducer = (state = [], action) => {
     case 'NEW_NOTE':
       return state.concat(action.data)
     case 'TOGGLE_IMPORTANCE':
-
+      return state
     default:
       return state
   }
@@ -35,20 +35,56 @@ store.dispatch({
   }
 })
 
-
+const generateId = () => {
+  return Number((Math.random() * 1000000).toFixed(0))
+}
+const createNote = (content) => {
+  return {
+    type: 'NEW_NOTE',
+    data: {
+      content,
+      important: false,
+      id: generateId()
+    }
+  }
+}
+const toggleImportanceOf = (id) => {
+  store.dispatch({
+    type: 'TOGGLE_IMPORTANCE',
+    data: { id }
+  })
+}
 
 function App() {
+  const addNote = (event) => {
+    event.preventDefault()
+    const content = event.target.note.value
+    event.target.note.value = ''
+    store.dispatch(createNote(content))
+  }
+  const toggleImportance = (id) => {
+    store.dispatch(toggleImportanceOf(id))
+  }
+
+
   return (
-    <div className="App">
+    <div>
+      <form onSubmit={addNote}>
+        <input name="note" />
+        <button type="submit">add</button>
+      </form>
       <ul>
-        {store.getState().map(note => {
-          <li key={note.id}>
-            {note.conten}<strong>{note.important ? 'important' : ''}</strong>
+        {store.getState().map(note =>
+          <li
+            key={note.id}
+            onClick={() => toggleImportance(note.id)}
+          >
+            {note.content} <strong>{note.important ? 'important' : ''}</strong>
           </li>
-        })}
+        )}
       </ul>
     </div>
-  );
+  )
 }
 
 export default App;
