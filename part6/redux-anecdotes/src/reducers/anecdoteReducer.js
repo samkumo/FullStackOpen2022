@@ -32,6 +32,7 @@ export const createAnecdote = (content) => {
     }
   }
 }
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
