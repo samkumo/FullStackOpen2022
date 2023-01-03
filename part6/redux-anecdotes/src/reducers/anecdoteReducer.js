@@ -22,6 +22,16 @@ export const addVote = (id) => {
     data: { id }
   }
 }
+export const createAnecdote = (content) => {
+  return {
+    type: 'CREATE_ANECDOTE',
+    data: {
+      content,
+      votes: Number(0),
+      id: getId()
+    }
+  }
+}
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
@@ -34,6 +44,11 @@ const reducer = (state = initialState, action) => {
       const input = state.find(n => n.id === id)
       const output = { ...input, votes: input.votes + 1 }
       return state.map(anecdote => anecdote.id !== id ? anecdote : output)
+    case 'CREATE_ANECDOTE':
+      console.log('state now: ', state)
+      console.log('action', action)
+
+      return [...state, action.data]
     default:
       return state
   }
