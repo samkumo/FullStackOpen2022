@@ -43,7 +43,9 @@ const reducer = (state = initialState, action) => {
       const id = action.data.id
       const input = state.find(n => n.id === id)
       const output = { ...input, votes: input.votes + 1 }
-      return state.map(anecdote => anecdote.id !== id ? anecdote : output)
+
+      const newState = state.map(anecdote => anecdote.id !== id ? anecdote : output)
+      return newState.sort((a, b) => b.votes - a.votes)
     case 'CREATE_ANECDOTE':
       console.log('state now: ', state)
       console.log('action', action)
