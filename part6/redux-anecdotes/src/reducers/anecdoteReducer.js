@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -8,7 +10,6 @@ const anecdotesAtStart = [
 ]
 
 const getId = () => (100000 * Math.random()).toFixed(0)
-
 const asObject = (anecdote) => {
   return {
     content: anecdote,
@@ -16,46 +17,31 @@ const asObject = (anecdote) => {
     votes: 0
   }
 }
-export const addVote = (id) => {
-  return {
-    type: 'ADD_VOTE',
-    data: { id }
-  }
-}
-export const createAnecdote = (content) => {
-  return {
-    type: 'CREATE_ANECDOTE',
-    data: {
-      content,
-      votes: Number(0),
-      id: getId()
-    }
-  }
-}
-
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'ADD_VOTE':
-      //      console.log('state now: ', state)
-      //     console.log('action', action)
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      const content = action.payload
+      state.push({
+        content,
+        votes: Number(0),
+        id: getId()
+      })
+    },
 
-      const id = action.data.id
-      const input = state.find(n => n.id === id)
-      const output = { ...input, votes: input.votes + 1 }
-
-      const newState = state.map(anecdote => anecdote.id !== id ? anecdote : output)
+    addVote(state, action) {
+      const id = action.payload
+      const before = state.find(n => n.id === id)
+      const after = { ...before, votes: before.votes + 1 }
+      const newState = state.map(n => n.id !== id ? n : after)
       return newState.sort((a, b) => b.votes - a.votes)
-    case 'CREATE_ANECDOTE':
-      console.log('state now: ', state)
-      console.log('action', action)
-
-      return [...state, action.data]
-    default:
-      return state
+    }
   }
-}
 
+})
 
-export default reducer
+export const { createAnecdote, addVote } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
