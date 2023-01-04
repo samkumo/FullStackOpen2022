@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import Filter from './Filter'
 
 const Anecdote = ({ anecdote, handleVote }) => {
     return (
@@ -17,7 +18,8 @@ const Anecdote = ({ anecdote, handleVote }) => {
 }
 const Anecdotes = () => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filterString).toUpperCase()
+    const anecdotes = useSelector(state => state.anecdotes).filter(n => n.content.toUpperCase().includes(filter))
 
     const handleVote = async (anecdote) => {
         dispatch(addVote(anecdote.id))
@@ -29,6 +31,7 @@ const Anecdotes = () => {
     return (
         <div>
             <h2>Anecdotes</h2>
+            <Filter></Filter>
             {anecdotes.map(anecdote =>
                 <Anecdote
                     key={anecdote.id}
