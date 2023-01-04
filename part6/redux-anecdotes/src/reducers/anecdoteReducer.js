@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { useDispatch, useSelector } from 'react-redux'
+import notificationReducer, { setNotification } from './notificationReducer'
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -8,6 +10,7 @@ const anecdotesAtStart = [
   'Premature optimization is the root of all evil.',
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
+
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 const asObject = (anecdote) => {
@@ -31,7 +34,6 @@ const anecdoteSlice = createSlice({
         id: getId()
       })
     },
-
     addVote(state, action) {
       const id = action.payload
       const before = state.find(n => n.id === id)
@@ -40,7 +42,6 @@ const anecdoteSlice = createSlice({
       return newState.sort((a, b) => b.votes - a.votes)
     }
   }
-
 })
 
 export const { createAnecdote, addVote } = anecdoteSlice.actions
