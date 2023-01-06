@@ -24,10 +24,11 @@ const Anecdotes = () => {
 
     const handleVote = async (anecdote) => {
         dispatch(addVote(anecdote))
-        dispatch(setNotification(`You voted '${anecdote.content}'`))
-        setTimeout(() => {
-            dispatch(setNotification(''))
-        }, 5000);
+        dispatch(setNotification(`You voted ${anecdote.content}`, 5000))
+        /*         dispatch(setNotification(`You voted '${anecdote.content}'`))
+                setTimeout(() => {
+                    dispatch(setNotification(''))
+                }, 5000); */
     }
     return (
         <div>
