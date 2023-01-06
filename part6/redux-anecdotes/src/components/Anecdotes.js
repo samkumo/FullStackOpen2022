@@ -23,10 +23,8 @@ const Anecdotes = () => {
     const anecdotes = useSelector(state => state.anecdotes).filter(n => n.content.toUpperCase().includes(filter))
 
     const handleVote = async (anecdote) => {
-        const updatedAnecdote = anecdote
-        const response = await anecdoteService.addVote(anecdote.id, updatedAnecdote)
-        await dispatch(addVote(response))
-        await dispatch(setNotification(`You voted '${response.content}'`))
+        dispatch(addVote(anecdote))
+        dispatch(setNotification(`You voted '${anecdote.content}'`))
         setTimeout(() => {
             dispatch(setNotification(''))
         }, 5000);
