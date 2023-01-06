@@ -6,7 +6,6 @@ const Notification = (props) => {
     padding: 10,
     borderWidth: 1
   }
-  //  const notification = useSelector(state => state.notification)
 
   return (
     <div style={style}>
