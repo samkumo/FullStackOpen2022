@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 //import App from './App'
 import {
@@ -29,15 +29,17 @@ const Note = ({ notes }) => {
     )
 }
 const Notes = ({ notes }) => {
-    <div>
-        <h2>Notes</h2>
-        <ul>
-            {notes.map(note =>
-                <li key={note.id}>
-                    <Link to={`/notes/${note.id}`}>{note.content}</Link>
-                </li>)}
-        </ul>
-    </div>
+    return (
+        <div>
+            <h2>Notes</h2>
+            <ul>
+                {notes.map(note =>
+                    <li key={note.id}>
+                        <Link to={`/notes/${note.id}`}>{note.content}</Link>
+                    </li>)}
+            </ul>
+        </div>
+    )
 }
 const Users = () => {
     <div>
@@ -72,26 +74,29 @@ const Login = (props) => {
     )
 }
 const App = () => {
-    const [notes, setNotes] = useState([
-        {
-            id: 1,
-            content: 'HTML is easy',
-            important: true,
-            user: 'Samuli Kumo'
-        },
-        {
-            id: 2,
-            content: 'Browser can execute only JavaScript',
-            important: false,
-            user: 'Samuli Kumo'
-        },
-        {
-            id: 3,
-            content: 'Most important methods of HTTP-protocol are GET and POST',
-            important: true,
-            user: 'Random Blogger'
-        }
-    ])
+    const [notes, setNotes] = useState([])
+    useEffect(() => {
+        setNotes([
+            {
+                id: 1,
+                content: 'HTML is easy',
+                important: true,
+                user: 'Samuli Kumo'
+            },
+            {
+                id: 2,
+                content: 'Browser can execute only JavaScript',
+                important: false,
+                user: 'Samuli Kumo'
+            },
+            {
+                id: 3,
+                content: 'Most important methods of HTTP-protocol are GET and POST',
+                important: true,
+                user: 'Random Blogger'
+            }])
+    }, [])
+
     const [user, setUser] = useState(null)
     const login = (user) => {
         setUser(user)
