@@ -1,13 +1,14 @@
 import { useState } from 'react'
+import './App.css'
 import ReactDOM from 'react-dom/client'
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Link,
-  Navigate,
   useParams,
   useNavigate,
+  redirect,
 } from 'react-router-dom'
 
 
@@ -71,11 +72,22 @@ const Footer = () => (
     See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
   </div>
 )
+const Notification = (props) => {
+  if (props.message === null) {
+    return (<div></div>)
+  }
+  return (
+    <div>
+      {props.message}
+    </div>
+  )
+}
 
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const navigate = useNavigate()
 
 
   const handleSubmit = (e) => {
@@ -86,6 +98,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -128,12 +141,16 @@ const App = () => {
       id: 2
     }
   ])
-
   const [notification, setNotification] = useState('')
+
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`New Anecdote added: ${anecdote.content}!`)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
   }
 
   const anecdoteById = (id) =>
@@ -155,6 +172,7 @@ const App = () => {
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
+        <Notification message={notification} />
         <Routes>
           <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path='/anecdotes/:id' element={<Anecdote anecdotes={anecdotes} />} />
