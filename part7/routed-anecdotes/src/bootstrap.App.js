@@ -1,24 +1,12 @@
+//App.js with Bootstrap styling
+
 import { useState } from 'react'
 import './App.css'
 import { useField } from './hooks/index'
+import { Table, Form, Button, Alert } from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav';
 import NavBar from 'react-bootstrap/Navbar';
-import {
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
-  TextField,
-  Button,
-  Alert,
-  AppBar,
-  Toolbar,
-  IconButton
-} from '@mui/material'
-
+import ReactDOM from 'react-dom/client'
 import {
   BrowserRouter as Router,
   Routes,
@@ -35,14 +23,22 @@ const Menu = () => {
     paddingRight: 5
   }
   return (
-    <AppBar position='static'>
-      <Toolbar>
-        <IconButton edge='start' color='inherit' aria-label='menu' />
-        <Button color='inherit' component={Link} to='/'>Home</Button>
-        <Button color='inherit' component={Link} to='/create'>Create New</Button>
-        <Button color='inherit' component={Link} to='/about'>About</Button>
-      </Toolbar>
-    </AppBar>
+    <NavBar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+      <NavBar.Toggle aria-controls='responsive-navbar-nav' />
+      <NavBar.Collapse id='responsive-navbar-nav'>
+        <Nav className='me-auto'>
+          <Nav.Link href='#' as='span'>
+            <Link style={padding} to='/'>Anecdotes</Link>
+          </Nav.Link>
+          <Nav.Link href='#' as='span'>
+            <Link style={padding} to='/create'>Create New</Link>
+          </Nav.Link>
+          <Nav.Link href='#' as='span'>
+            <Link style={padding} to='/about'>About</Link>
+          </Nav.Link>
+        </Nav>
+      </NavBar.Collapse>
+    </NavBar>
   )
 }
 
@@ -50,18 +46,18 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <Table striped>
-      <TableBody>
+      <tbody>
         {anecdotes.map(anecdote =>
-          <TableRow key={anecdote.id}>
-            <TableCell>
+          <tr key={anecdote.id}>
+            <td>
               <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-            </TableCell>
-            <TableCell>
+            </td>
+            <td>
               {anecdote.author}
-            </TableCell>
-          </TableRow>
+            </td>
+          </tr>
         )}
-      </TableBody>
+      </tbody>
     </Table>
   </div>
 )
@@ -105,9 +101,12 @@ const Notification = (props) => {
   return (
     <div classname='container'>
       {(props.message &&
-        <Alert severity='success'>{props.message}</Alert>
+        <Alert variant='success'>{props.message}</Alert>
       )}
     </div>
+    /*    <div>
+         {props.message}
+       </div> */
   )
 }
 
@@ -140,20 +139,38 @@ const CreateNew = (props) => {
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <TextField label='content' type={content.type} name='content' value={content.value} onChange={(e) => content.onChange(e)} />
-        </div>
-        <div>
-          <TextField label='author' type={author.type} name='author' value={author.value} onChange={(e) => author.onChange(e)} />
-        </div>
-        <div>
-          <TextField label='info' type={info.type} name='info' value={info.value} onChange={(e) => info.onChange(e)} />
-        </div>
-        <Button variant='contained' color='primary' type='submit'>Create</Button>
-        <Button variant='contained' color='secondary' onClick={handleClear}>Clear</Button>
+        <Form.Group>
+          <Form.Label>Content:</Form.Label>
+          <Form.Control
+            type={content.type}
+            name='content'
+            value={content.value}
+            onChange={(e) => content.onChange(e)}
+          >
+          </Form.Control>
+          <Form.Label>Author:</Form.Label>
+          <Form.Control
+            type={author.type}
+            name='author'
+            value={author.value}
+            onChange={(e) => author.onChange(e)}
+          >
+          </Form.Control>
+          <Form.Label>Info:</Form.Label>
+          <Form.Control
+            type={info.type}
+            name='info'
+            value={info.value}
+            onChange={(e) => info.onChange(e)}
+          >
+          </Form.Control>
+        </Form.Group>
+        <Button variant='primary' type='submit'>Create</Button>
+        <Button variant='secondary' onClick={handleClear}>Clear</Button>
       </form>
     </div>
   )
+
 }
 
 const App = () => {
@@ -200,7 +217,7 @@ const App = () => {
   }
 
   return (
-    <Container>
+    <div className='container'>
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
@@ -214,7 +231,7 @@ const App = () => {
       </Router>
       <br />
       <Footer />
-    </Container>
+    </div>
   )
 }
 
