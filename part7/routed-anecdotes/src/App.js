@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import './App.css'
 import { useField } from './hooks/index'
+import { Table, Form, Button, Alert } from 'react-bootstrap'
+import Nav from 'react-bootstrap/Nav';
+import NavBar from 'react-bootstrap/Navbar';
 import ReactDOM from 'react-dom/client'
 import {
   BrowserRouter as Router,
@@ -18,23 +21,42 @@ const Menu = () => {
     paddingRight: 5
   }
   return (
-    <div>
-      <Link style={padding} to='/'>Anecdotes</Link>
-      <Link style={padding} to='/create'>Create New</Link>
-      <Link style={padding} to='/about'>About</Link>
-    </div>
+    <NavBar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+      <NavBar.Toggle aria-controls='responsive-navbar-nav' />
+      <NavBar.Collapse id='responsive-navbar-nav'>
+        <Nav className='me-auto'>
+          <Nav.Link href='#' as='span'>
+            <Link style={padding} to='/'>Anecdotes</Link>
+          </Nav.Link>
+          <Nav.Link href='#' as='span'>
+            <Link style={padding} to='/create'>Create New</Link>
+          </Nav.Link>
+          <Nav.Link href='#' as='span'>
+            <Link style={padding} to='/about'>About</Link>
+          </Nav.Link>
+        </Nav>
+      </NavBar.Collapse>
+    </NavBar>
   )
 }
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote =>
-        <li key={anecdote.id} >
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>)}
-    </ul>
+    <Table striped>
+      <tbody>
+        {anecdotes.map(anecdote =>
+          <tr key={anecdote.id}>
+            <td>
+              <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+            </td>
+            <td>
+              {anecdote.author}
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </Table>
   </div>
 )
 const Anecdote = ({ anecdotes }) => {
@@ -74,13 +96,15 @@ const Footer = () => (
   </div>
 )
 const Notification = (props) => {
-  if (props.message === null) {
-    return (<div></div>)
-  }
   return (
-    <div>
-      {props.message}
+    <div classname='container'>
+      {(props.message &&
+        <Alert variant='success'>{props.message}</Alert>
+      )}
     </div>
+    /*    <div>
+         {props.message}
+       </div> */
   )
 }
 
@@ -113,20 +137,34 @@ const CreateNew = (props) => {
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name='content' type={content.type} value={content.value} onChange={(e) => content.onChange(e)} />
-        </div>
-        <div>
-          author
-          <input name='author' type={author.type} value={author.value} onChange={(e) => author.onChange(e)} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' type={info.type} value={info.value} onChange={(e) => info.onChange(e)} />
-        </div>
-        <button>create</button>
-        <button onClick={handleClear}>Clear</button>
+        <Form.Group>
+          <Form.Label>Content:</Form.Label>
+          <Form.Control
+            type={content.type}
+            name='content'
+            value={content.value}
+            onChange={(e) => content.onChange(e)}
+          >
+          </Form.Control>
+          <Form.Label>Author:</Form.Label>
+          <Form.Control
+            type={author.type}
+            name='author'
+            value={author.value}
+            onChange={(e) => author.onChange(e)}
+          >
+          </Form.Control>
+          <Form.Label>Info:</Form.Label>
+          <Form.Control
+            type={info.type}
+            name='info'
+            value={info.value}
+            onChange={(e) => info.onChange(e)}
+          >
+          </Form.Control>
+        </Form.Group>
+        <Button variant='primary' type='submit'>Create</Button>
+        <Button variant='secondary' onClick={handleClear}>Clear</Button>
       </form>
     </div>
   )
@@ -177,7 +215,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className='container'>
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
