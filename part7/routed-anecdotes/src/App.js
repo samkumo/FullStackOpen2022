@@ -90,7 +90,6 @@ const CreateNew = (props) => {
   const info = useField('info')
   const navigate = useNavigate()
 
-
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(e);
