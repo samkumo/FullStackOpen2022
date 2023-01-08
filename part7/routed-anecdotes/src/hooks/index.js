@@ -1,6 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
 import { useState } from 'react'
 
 export const useField = (type) => {
@@ -15,5 +12,3 @@ export const useField = (type) => {
         onChange
     }
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
