@@ -93,6 +93,7 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    console.log(e);
     console.log(content);
     props.addNew({
       content: content.value,
@@ -101,6 +102,12 @@ const CreateNew = (props) => {
       votes: 0
     })
     navigate('/')
+  }
+  const handleClear = (e) => {
+    e.preventDefault()
+    content.clear()
+    author.clear()
+    info.clear()
   }
 
   return (
@@ -120,6 +127,7 @@ const CreateNew = (props) => {
           <input name='info' type={info.type} value={info.value} onChange={(e) => info.onChange(e)} />
         </div>
         <button>create</button>
+        <button onClick={handleClear}>Clear</button>
       </form>
     </div>
   )
