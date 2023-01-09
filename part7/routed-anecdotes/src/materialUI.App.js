@@ -1,20 +1,19 @@
+//App.js with MaterialUI styling
+
 import { useState } from 'react'
 import './App.css'
 import { useField } from './hooks/index'
-import styled from 'styled-components'
 import {
   Container,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
-  Paper,
   TextField,
-  // Button,
+  Button,
   Alert,
-  // AppBar,
-  // Toolbar,
+  AppBar,
+  Toolbar,
   IconButton
 } from '@mui/material'
 
@@ -25,49 +24,29 @@ import {
   Link,
   useParams,
   useNavigate,
-  redirect,
 } from 'react-router-dom'
 
-//
-// Styled components
-//
-const Button = styled.button`
-  background: Bisque;
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid Chocolate;
-  border-radius: 3px`
-const Input = styled.input`
-  margin: 0.25em;`
-const Page = styled.div`
-  padding: 1em;
-  background: papayawhip;`
-const Navigation = styled.div`
-  padding: 1em;
-  background: BurlyWood;`
-const Footer = styled.div`
-  background: Chocolate;
-  padding: 1em;
-  margin-top: 1em;`
 
 const Menu = () => {
   const padding = {
     paddingRight: 5
   }
   return (
-    <Navigation>
-      <Link style={padding} to='/'>Home</Link>
-      <Link style={padding} to='/create'>Create New</Link>
-      <Link style={padding} to='/about'>About</Link>
-    </Navigation>
+    <AppBar position='static'>
+      <Toolbar>
+        <IconButton edge='start' color='inherit' aria-label='menu' />
+        <Button color='inherit' component={Link} to='/'>Home</Button>
+        <Button color='inherit' component={Link} to='/create'>Create New</Button>
+        <Button color='inherit' component={Link} to='/about'>About</Button>
+      </Toolbar>
+    </AppBar>
   )
 }
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <Table>
+    <Table striped>
       <TableBody>
         {anecdotes.map(anecdote =>
           <TableRow key={anecdote.id}>
@@ -112,7 +91,7 @@ const About = () => (
   </div>
 )
 
-const PageFooter = () => (
+const Footer = () => (
   <div>
     Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
 
@@ -121,7 +100,7 @@ const PageFooter = () => (
 )
 const Notification = (props) => {
   return (
-    <div className='container'>
+    <div classname='container'>
       {(props.message &&
         <Alert severity='success'>{props.message}</Alert>
       )}
@@ -158,17 +137,17 @@ const CreateNew = (props) => {
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>Content:
-          <Input name='content' type={content.type} value={content.value} onChange={(e) => content.onChange(e)} />
+        <div>
+          <TextField label='content' type={content.type} name='content' value={content.value} onChange={(e) => content.onChange(e)} />
         </div>
-        <div> Author:
-          <Input name='author' type={author.type} value={author.value} onChange={(e) => author.onChange(e)} />
+        <div>
+          <TextField label='author' type={author.type} name='author' value={author.value} onChange={(e) => author.onChange(e)} />
         </div>
-        <div>Info:
-          <Input name='info' type={info.type} value={info.value} onChange={(e) => info.onChange(e)} />
+        <div>
+          <TextField label='info' type={info.type} name='info' value={info.value} onChange={(e) => info.onChange(e)} />
         </div>
-        <Button type='submit'>Create</Button>
-        <Button onClick={handleClear}>Clear</Button>
+        <Button variant='contained' color='primary' type='submit'>Create</Button>
+        <Button variant='contained' color='secondary' onClick={handleClear}>Clear</Button>
       </form>
     </div>
   )
@@ -218,7 +197,7 @@ const App = () => {
   }
 
   return (
-    <Page>
+    <Container>
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
@@ -231,11 +210,8 @@ const App = () => {
         </Routes>
       </Router>
       <br />
-      <Footer>
-        <PageFooter />
-      </Footer>
-
-    </Page>
+      <Footer />
+    </Container>
   )
 }
 
