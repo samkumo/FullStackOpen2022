@@ -1,11 +1,12 @@
 import Blog from './Blog'
+import { connect } from 'react-redux'
 
 const Blogs = (props) => {
-    props.blogs.sort((x, y) => y.likes - x.likes)
+    const blogs = [...props.blogs].sort((x, y) => y.likes - x.likes)
     return (
         <div id='blogs-div'>
             <h2>Blogs</h2>
-            {props.blogs.map(blog =>
+            {blogs.map(blog =>
                 <Blog
                     id='blog-item'
                     key={blog.id}
@@ -16,4 +17,8 @@ const Blogs = (props) => {
             }
         </div>)
 }
-export default Blogs
+const mapStateToProps = (state) => {
+    return { blogs: state.blogs }
+}
+const ConnectedBlogs = connect(mapStateToProps)(Blogs)
+export default ConnectedBlogs

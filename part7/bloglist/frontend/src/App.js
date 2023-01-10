@@ -2,19 +2,21 @@ import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import Blogs from './components/Blogs'
 import Notification from './components/Notification'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import blogService from './services/blogService'
+import loginService from './services/loginService'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import { initializeBlogs } from './reducers/blogReducer'
 import './App.css'
 
 
 const App = () => {
   const dispatch = useDispatch()
-  //useEffect(()=>{
-  //  dispatch(initialBlogs())
-  //},[dispatch])
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, [dispatch])
+
   const [blogs, setBlogs] = useState([])
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -25,12 +27,13 @@ const App = () => {
 
   const blogDetailRef = useRef()
 
-  useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs(blogs)
-    }
-    )
-  }, [])
+  /*   useEffect(() => {
+      blogService.getAll().then(blogs => {
+        setBlogs(blogs)
+      }
+      )
+    }, []) */
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistAppUser')
     if (loggedUserJSON) {
@@ -70,20 +73,20 @@ const App = () => {
         setTimeout(() => { setSuccessMessage(null), 5000 })
       }).catch(error => console.log(error.message))
   }
-  const updateBlog = (blogObject) => {
-    blogService.update(blogObject)
-      .then((returnedblog) => {
-        setBlogs(blogs.map(x => x.id !== returnedblog.id ? x : returnedblog))
-      }).catch(error => console.log(error.message))
-  }
-  const deleteBlog = (blogObject) => {
-    if (window.confirm(`Remove blog '${blogObject.title} by ${blogObject.author}?`)) {
-      blogService.deleteBlog(blogObject.id)
-        .then(() => {
-          setBlogs(blogs.filter(x => x.id !== blogObject.id))
+  /*   const updateBlog = (blogObject) => {
+      blogService.update(blogObject)
+        .then((returnedblog) => {
+          setBlogs(blogs.map(x => x.id !== returnedblog.id ? x : returnedblog))
         }).catch(error => console.log(error.message))
     }
-  }
+    const deleteBlog = (blogObject) => {
+      if (window.confirm(`Remove blog '${blogObject.title} by ${blogObject.author}?`)) {
+        blogService.deleteBlog(blogObject.id)
+          .then(() => {
+            setBlogs(blogs.filter(x => x.id !== blogObject.id))
+          }).catch(error => console.log(error.message))
+      }
+    } */
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -125,9 +128,9 @@ const App = () => {
           </Togglable>}
         </div>}
       <Blogs
-        blogs={blogs}
-        updateBlog={updateBlog}
-        deleteBlog={deleteBlog}
+      // blogs={blogs}
+      //  updateBlog={updateBlog}
+      // deleteBlog={deleteBlog}
       ></Blogs>
     </div>
   )
