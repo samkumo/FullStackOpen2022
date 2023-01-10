@@ -6,10 +6,14 @@ const Blogs = (props) => {
         <div id='blogs-div'>
             <h2>Blogs</h2>
             {props.blogs.map(blog =>
-                <Blog id='blog-item' key={blog.id}
+                <Blog
+                    id='blog-item'
+                    key={blog.id}
                     blog={blog}
                     updateBlog={props.updateBlog}
-                    deleteBlog={props.deleteBlog} />)}
+                    deleteBlog={props.deleteBlog}>
+                </Blog>)
+            }
         </div>)
 }
 export default Blogs

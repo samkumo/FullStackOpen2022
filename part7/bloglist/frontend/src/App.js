@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -8,7 +9,12 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import './App.css'
 
+
 const App = () => {
+  const dispatch = useDispatch()
+  //useEffect(()=>{
+  //  dispatch(initialBlogs())
+  //},[dispatch])
   const [blogs, setBlogs] = useState([])
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -18,7 +24,6 @@ const App = () => {
   const [loginVisible, setLoginVisible] = useState(false)
 
   const blogDetailRef = useRef()
-
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -106,17 +111,18 @@ const App = () => {
   return (
     <div>
       <h1>Application</h1>
-      <Notification message={errorMessage} type='error'></Notification>
-      <Notification message={successMessage} type='success'></Notification>
+      <Notification></Notification>
+      {/*       <Notification message={errorMessage} type='error'></Notification>
+      <Notification message={successMessage} type='success'></Notification> */}
       {user === null
         ? loginForm()
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button>
-          <Togglable buttonLabel1='New blog' buttonLabel2='Cancel'>
+          {<Togglable buttonLabel1='New blog' buttonLabel2='Cancel'>
             <BlogForm
               createBlog={addBlog}
               ref={blogDetailRef} />
-          </Togglable>
+          </Togglable>}
         </div>}
       <Blogs
         blogs={blogs}
