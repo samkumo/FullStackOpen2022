@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 
 const BlogForm = (props) => {
     const [title, setTitle] = useState('')
@@ -20,7 +19,6 @@ const BlogForm = (props) => {
         setTitle('')
         setAuthor('')
         setUrl('')
-        //props.createBlog(blog)
         dispatch(createBlog(blog))
         props.setNotification('BLOG_ADDED', 5000)
     }
@@ -65,10 +63,6 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = {
     setNotification
-}
-BlogForm.propTypes = {
-    createBlog: PropTypes.func.isRequired,
-    updateBlog: PropTypes.func
 }
 const ConnectedBlogForm = connect(mapStateToProps, mapDispatchToProps)(BlogForm)
 export default ConnectedBlogForm

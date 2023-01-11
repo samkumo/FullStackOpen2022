@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import Blogs from './components/Blogs'
 import Notification from './components/Notification'
@@ -8,13 +8,16 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { initializeBlogs } from './reducers/blogReducer'
+import { restoreSession } from './reducers/userReducer'
 import './App.css'
+import store from './store'
 
 
 const App = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(restoreSession())
   }, [dispatch])
 
   const [blogs, setBlogs] = useState([])
@@ -25,7 +28,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [loginVisible, setLoginVisible] = useState(false)
 
-  const blogDetailRef = useRef()
+  //const blogDetailRef = useRef()
 
   /*   useEffect(() => {
       blogService.getAll().then(blogs => {
@@ -117,21 +120,17 @@ const App = () => {
       <Notification></Notification>
       {/*       <Notification message={errorMessage} type='error'></Notification>
       <Notification message={successMessage} type='success'></Notification> */}
-      {user === null
+      <LoginForm></LoginForm>
+      {/*       {user === null
         ? loginForm()
         : <div><p>{user.name} logged in</p>
           <button onClick={() => handleLogout()}>Logout</button>
           {<Togglable buttonLabel1='New blog' buttonLabel2='Cancel'>
             <BlogForm
-              createBlog={addBlog}
-              ref={blogDetailRef} />
+              createBlog={addBlog} />
           </Togglable>}
-        </div>}
-      <Blogs
-      // blogs={blogs}
-      //  updateBlog={updateBlog}
-      // deleteBlog={deleteBlog}
-      ></Blogs>
+        </div>} */}
+      <Blogs></Blogs>
     </div>
   )
 }
